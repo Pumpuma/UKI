@@ -1,7 +1,8 @@
 import requests
 import json
 
-GITHUB_TOKEN = "your_github_token"
+# Use the provided GitHub Personal Access Token
+GITHUB_TOKEN = "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"
 REPO_OWNER = "Pumpuma"
 REPO_NAME = "UKI"
 FILE_PATH = "keys.json"
