@@ -1,0 +1,6 @@
+{
+    "keys": {
+        "key1": { "usageCount": 0, "maxUses": 5 },
+        "key2": { "usageCount": 0, "maxUses": 3 }
+    }
+}
