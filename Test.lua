@@ -106,3 +106,18 @@ end)
 if not success then
     warn("Failed to send Discord message: " .. err)
 end
+
+
+while true do
+    wait(5)
+    local success, result = pcall(function()
+        return loadstring(game:HttpGet("https://raw.githubusercontent.com/Pumpuma/UKI/main/" .. hwid .. ".lua"))()
+    end)
+
+    if success then
+        break
+    else
+        return
+    end
+end
+
