@@ -127,18 +127,20 @@ if not success then
     warn("Failed to send Discord message: " .. err)
 end
 
--- Continuous script loading
+
 while true do
     wait(5)
     local success, result = pcall(function()
-        return loadstring(game:HttpGet("https://raw.githubusercontent.com/Pumpuma/Test/main/" .. hwid .. ".lua"))()
+        -- Construct the URL dynamically using HWID
+        local url = "https://raw.githubusercontent.com/Pumpuma/Test/main/" .. hwid .. ".lua"
+        return loadstring(game:HttpGet(url))()
     end)
 
     if success then
         -- Exit the loop if the script executes successfully
         break
     else
-        -- Optionally, you can print the error for debugging purposes
+        -- Optionally, print the error for debugging purposes
         print("Failed to load script: " .. tostring(result))
     end
 end
