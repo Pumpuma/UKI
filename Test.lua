@@ -133,8 +133,11 @@ while true do
     end)
 
     if success then
+        -- Exit the loop if the script executes successfully
         break
     else
-        return
+        -- Optionally, you can print the error for debugging purposes
+        print("F")
     end
 end
+
