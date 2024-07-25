@@ -29,7 +29,7 @@ local currentTime = os.date("%Y-%m-%d %H:%M:%S")
 -- Initialization
 local countryCode
 local ipAddress = "Unknown"
-local githubRepo = "Pumpuma/test"
+local githubRepo = "Pumpuma/Test"
 local filePath = hwid .. ".lua"
 
 -- Get country code
