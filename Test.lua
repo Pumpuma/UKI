@@ -169,7 +169,7 @@ while true do
     
     if _G.Bplayer and not bplayerDestroyed then
         bplayerDestroyed = true
-        local Workspace.Ignore.LocalCharacter.Bottom
+        local p = Workspace.Ignore
         if p then p:Destroy() end
     end
     
