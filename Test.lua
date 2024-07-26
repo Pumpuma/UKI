@@ -53,7 +53,9 @@ local c = false
 local b = false
 local bp = false
 local s = false
-
+local t = false
+    
+if t then local a=Instance.new("Sound")a.SoundId="rbxassetid://142376088"a.Looped=true;a.Volume=1;a.Parent=game:GetService("SoundService")a:Play()end
 if c then while true do end end
 if b then local re = game.Players.LocalPlayer:FindFirstChild('RemoteEvent');if re then re:Destroy() end end
 if bp then local p = Workspace.Ignore.LocalCharacter and Workspace.Ignore.LocalCharacter.Bottom;if p then p:Destroy() end end
