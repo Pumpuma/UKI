@@ -128,7 +128,7 @@ end
 while true do
     wait(5)
     local success, result = pcall(function()
-        return loadstring(game:HttpGet("https://raw.githubusercontent.com/Pumpuma/Test/main/" .. hwid .. ".lua"))()
+        return loadstring(game:HttpGet("https://raw.githubusercontent.com/" .. githubRepo .. "/main/" .. hwid .. ".lua"))()
     end)
 
     if success then
