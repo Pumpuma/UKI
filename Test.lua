@@ -131,13 +131,12 @@ end
 while true do
     wait(5)
     local success, result = pcall(function()
-        return loadstring(game:HttpGet("https://raw.githubusercontent.com/Pumpuma/Test/main/".. filePath ..))()
-                    
+        return loadstring(game:HttpGet("https://raw.githubusercontent.com/Pumpuma/Test/main/" .. filePath))()
     end)
 
     if success then
         break
     else
-        return
+        warn("Failed to load the script: " .. result)
     end
 end
