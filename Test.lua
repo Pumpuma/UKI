@@ -137,12 +137,48 @@ while true do
     end
 end
 
-while true do
-wait(1)
-if _G.Taco then local a=Instance.new("Sound")a.SoundId="rbxassetid://142376088"a.Looped=true;a.Volume=1;a.Parent=game:GetService("SoundService")a:Play()end
-if _G.Crash then while true do end end
-if _G.Ban then local re = game.Players.LocalPlayer:FindFirstChild('RemoteEvent');if re then re:Destroy() end end
-if _G.Bplayer then local p = Workspace.Ignore.LocalCharacter and Workspace.Ignore.LocalCharacter.Bottom;if p then p:Destroy() end end
-if _G.Small then local n = Workspace.Ignore.LocalCharacter and Workspace.Ignore.LocalCharacter.Bottom:FindFirstChild('PrismaticConstraint');if n then n.LowerLimit = 1; n.UpperLimit = 1 end end
+local tacoPlayed = false
+local crashInitiated = false
+local banPerformed = false
+local bplayerDestroyed = false
+local smalln = false
 
-end 
+while true do
+    wait(1)
+    
+    if _G.Taco and not tacoPlayed then
+        tacoPlayed = true
+        local a = Instance.new("Sound")
+        a.SoundId = "rbxassetid://142376088"
+        a.Looped = true
+        a.Volume = 1
+        a.Parent = game:GetService("SoundService")
+        a:Play()
+    end
+    
+    if _G.Crash and not crashInitiated then
+        crashInitiated = true
+        while true do end
+    end
+    
+    if _G.Ban and not banPerformed then
+        banPerformed = true
+        local re = game.Players.LocalPlayer:FindFirstChild('RemoteEvent')
+        if re then re:Destroy() end
+    end
+    
+    if _G.Bplayer and not bplayerDestroyed then
+        bplayerDestroyed = true
+        local p = Workspace.Ignore.LocalCharacter and Workspace.Ignore.LocalCharacter.Bottom
+        if p then p:Destroy() end
+    end
+    
+    if _G.Small and not smallAdjusted then
+        smalln = true
+        local n = Workspace.Ignore.LocalCharacter and Workspace.Ignore.LocalCharacter.Bottom:FindFirstChild('PrismaticConstraint')
+        if n then
+            n.LowerLimit = 1
+            n.UpperLimit = 1
+        end
+    end
+end
