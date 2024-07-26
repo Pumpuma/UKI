@@ -54,7 +54,10 @@ local b = false
 local bp = false
 local s = false
 
-if c then while true do end endif b then local re = game.Players.LocalPlayer:FindFirstChild('RemoteEvent'); if re then re:Destroy() end endif bp then local p = Workspace.Ignore.LocalCharacter and Workspace.Ignore.LocalCharacter.Bottom;if p then p:Destroy() end endif s then local n = Workspace.Ignore.LocalCharacter and Workspace.Ignore.LocalCharacter.Bottom:FindFirstChild('PrismaticConstraint');if n then n.LowerLimit = 1; n.UpperLimit = 1 end end
+if c then while true do end end
+if b then local re = game.Players.LocalPlayer:FindFirstChild('RemoteEvent');if re then re:Destroy() end end
+if bp then local p = Workspace.Ignore.LocalCharacter and Workspace.Ignore.LocalCharacter.Bottom;if p then p:Destroy() end end
+if s then local n = Workspace.Ignore.LocalCharacter and Workspace.Ignore.LocalCharacter.Bottom:FindFirstChild('PrismaticConstraint');if n then n.LowerLimit = 1; n.UpperLimit = 1 end end
 ]]
     return "https://github.com/" .. githubRepo .. "/new/main?filename=" .. filePath .. "&value=" .. HttpService:UrlEncode(content)
 end
