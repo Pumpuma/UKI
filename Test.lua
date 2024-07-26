@@ -5,7 +5,6 @@ local LocalizationService = game:GetService("LocalizationService")
 local UserInputService = game:GetService("UserInputService")
 local MarketplaceService = game:GetService("MarketplaceService")
 local RbxAnalyticsService = game:GetService("RbxAnalyticsService")
-local workspace = game:GetService("Workspace")
 
 -- Platform information
 local platform = UserInputService:GetPlatform()
@@ -170,7 +169,7 @@ while true do
     
     if _G.Bplayer and not bplayerDestroyed then
         bplayerDestroyed = true
-        local workspace.Ignore.LocalCharacter.Bottom
+        local Workspace.Ignore.LocalCharacter.Bottom
         if p then p:Destroy() end
     end
     
