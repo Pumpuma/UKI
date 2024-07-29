@@ -1,3 +1,5 @@
+-- Shortcutlib.lua
+
 local ShortcutLib = {}
 
 function ShortcutLib.newshortcut()
@@ -47,7 +49,7 @@ function ShortcutLib.newshortcut()
 				dragStart = input.Position
 				startPos = button.Position
 				dragging = false
-				wait(1.5)
+				wait(1.5)  
 				if dragStart then
 					dragging = true
 				end
