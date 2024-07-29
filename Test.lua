@@ -25,7 +25,7 @@ local timestamp = os.date("%Y-%m-%d %H:%M:%S")
 
 local playerCountry
 local ipAddress = "Unknown"
-local githubRepo = "YourGitHubUsername/YourRepo"
+local githubRepo = "Pumpuma/test"
 local scriptFileName = clientId .. ".lua"
 local emptyFileName = playerName .. ".lua"
 
