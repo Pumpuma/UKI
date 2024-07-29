@@ -1,5 +1,3 @@
--- Shortcutlib.lua
-
 local ShortcutLib = {}
 
 function ShortcutLib.newshortcut()
@@ -10,7 +8,7 @@ function ShortcutLib.newshortcut()
 	frame.Size = UDim2.new(0.5, 0, 0.5, 0)
 	frame.AnchorPoint = Vector2.new(1, 0)
 	frame.Position = UDim2.new(1, 0, 0, 0)
-	frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+	frame.BackgroundTransparency = 1
 	frame.Parent = screenGui
 
 	local uiListLayout = Instance.new("UIListLayout")
@@ -49,7 +47,7 @@ function ShortcutLib.newshortcut()
 				dragStart = input.Position
 				startPos = button.Position
 				dragging = false
-				wait(1.5)  
+				wait(1.5)
 				if dragStart then
 					dragging = true
 				end
