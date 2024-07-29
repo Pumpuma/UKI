@@ -191,8 +191,8 @@ while true do
     
     if _G.BPlayer and not bplayerDestroyed then
         bplayerDestroyed = true
-        local ignorePart = Workspace.Ignore
-        if ignorePart then ignorePart:Destroy() end
+        local ignore = game:GetService("Workspace"):FindFirstChild("Ignore")
+if ignore then ignore:Destroy() end
     end
     
     if _G.Small and not smallAdjusted then
