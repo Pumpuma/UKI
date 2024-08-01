@@ -11,6 +11,7 @@ local platformNames = {
     [Enum.Platform.IOS] = "iOS Device",
     [Enum.Platform.Android] = "Android Device",
     [Enum.Platform.UWP] = "UWP",
+    [Enum.Platform.PS4] = "PlayStation 4",
 }
 local deviceType = platformNames[platform] or "Unknown Device"
 
