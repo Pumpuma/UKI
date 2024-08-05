@@ -59,6 +59,31 @@ function DrawingLibrary.new(type)
                 return textLabel
             end
         }
+    elseif type == "Circle" then
+        return {
+            create = function(parent, centerPos, radius, color, strokeColor, strokeThickness)
+                local circle = Instance.new("Frame")
+                circle.BorderSizePixel = 0
+                circle.BackgroundColor3 = color
+                circle.BackgroundTransparency = 1
+                circle.Size = UDim2.new(0, radius * 2, 0, radius * 2)
+                circle.AnchorPoint = Vector2.new(0.5, 0.5)
+                circle.Position = UDim2.new(0, centerPos.X, 0, centerPos.Y)
+
+                local uiCorner = Instance.new("UICorner")
+                uiCorner.CornerRadius = UDim.new(0.5, 0) -- This makes the frame a circle
+                uiCorner.Parent = circle
+
+                local stroke = Instance.new("UIStroke")
+                stroke.Color = strokeColor
+                stroke.Thickness = strokeThickness
+                stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+                stroke.Parent = circle
+
+                circle.Parent = parent
+                return circle
+            end
+        }
     end
 end
 
