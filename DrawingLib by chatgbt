@@ -88,16 +88,6 @@ function DrawingLib.new(type, parent)
     drawing.Instance = createDrawingInstance(type, drawing.Parent)
     setmetatable(drawing, createDrawingMetatable(drawing))
 
-    function drawing:UpdateTextProperties(properties)
-        if self.Type == "Text" then
-            for prop, value in pairs(properties) do
-                if self.Instance[prop] ~= nil then
-                    self.Instance[prop] = value
-                end
-            end
-        end
-    end
-
     function drawing:Destroy()
         self.Instance:Destroy()
     end
