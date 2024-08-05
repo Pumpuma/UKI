@@ -1,5 +1,3 @@
--- DrawingLib.lua
-
 local DrawingLib = {}
 
 local function createDrawingInstance(type, parent)
@@ -65,13 +63,17 @@ local function createDrawingMetatable(drawing)
         __index = function(t, key)
             if key == "Parent" then
                 return t.Instance.Parent
-            else
+            elseif t.Instance:IsA("TextLabel") and (key == "Text" or key == "TextColor3" or key == "TextStrokeTransparency") then
+                return t.Instance[key]
+            elseif t.Instance[key] ~= nil then
                 return t.Instance[key]
             end
         end,
         __newindex = function(t, key, value)
             if key == "Parent" then
                 t.Instance.Parent = value
+            elseif t.Instance:IsA("TextLabel") and (key == "Text" or key == "TextColor3" or key == "TextStrokeTransparency") then
+                t.Instance[key] = value
             elseif t.Instance[key] ~= nil then
                 t.Instance[key] = value
             end
