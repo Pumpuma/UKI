@@ -2,9 +2,6 @@
 local Drawing = {}
 
 function Drawing.new(type)
-    local strokeColor = Color3.fromRGB(0, 0, 0) -- Black stroke
-    local strokeThickness = 2 -- Adjust as needed
-
     if type == "Line" then
         return {
             create = function(parent, startPos, endPos, color, thickness)
@@ -15,20 +12,13 @@ function Drawing.new(type)
                 line.Size = UDim2.new(0, (startPos - endPos).Magnitude, 0, thickness)
                 line.Position = UDim2.new(0, (startPos + endPos).X / 2, 0, (startPos + endPos).Y / 2)
                 line.Rotation = math.deg(math.atan2(endPos.Y - startPos.Y, endPos.X - startPos.X))
-                
-                local stroke = Instance.new("UIStroke")
-                stroke.Color = strokeColor
-                stroke.Thickness = strokeThickness
-                stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-                stroke.Parent = line
-                
                 line.Parent = parent
                 return line
             end
         }
     elseif type == "Square" then
         return {
-            create = function(parent, centerPos, width, height, color, strokeThickness)
+            create = function(parent, centerPos, width, height, color, strokeColor, strokeThickness)
                 local square = Instance.new("Frame")
                 square.BorderSizePixel = 0
                 square.BackgroundColor3 = color
@@ -36,7 +26,7 @@ function Drawing.new(type)
                 square.Size = UDim2.new(0, width, 0, height)
                 square.AnchorPoint = Vector2.new(0.5, 0.5)
                 square.Position = UDim2.new(0, centerPos.X, 0, centerPos.Y)
-                
+
                 local stroke = Instance.new("UIStroke")
                 stroke.Color = strokeColor
                 stroke.Thickness = strokeThickness
@@ -57,8 +47,7 @@ function Drawing.new(type)
                 textLabel.Position = UDim2.new(0, position.X, 0, position.Y)
                 textLabel.BackgroundTransparency = 1
                 textLabel.TextColor3 = color
-                textLabel.TextStrokeColor3 = strokeColor -- Black stroke color
-                textLabel.TextStrokeTransparency = 0.5 -- Adjust transparency as needed
+                textLabel.TextStrokeTransparency = 1
                 textLabel.TextScaled = true
                 textLabel.Parent = parent
                 return textLabel
@@ -66,7 +55,7 @@ function Drawing.new(type)
         }
     elseif type == "Circle" then
         return {
-            create = function(parent, centerPos, diameter, color, strokeThickness)
+            create = function(parent, centerPos, diameter, color, strokeColor, strokeThickness)
                 local circle = Instance.new("Frame")
                 circle.BorderSizePixel = 0
                 circle.BackgroundColor3 = color
