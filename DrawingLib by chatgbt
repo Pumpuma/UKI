@@ -1,0 +1,106 @@
+-- DrawingLib.lua
+
+local DrawingLib = {}
+
+local function createDrawingInstance(type, parent)
+    local instance
+    if type == "Line" then
+        instance = Instance.new("Frame")
+        instance.BorderSizePixel = 0
+        instance.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+        instance.AnchorPoint = Vector2.new(0.5, 0.5)
+        instance.Position = UDim2.new(0, 0, 0, 0)
+        instance.Size = UDim2.new(0, 100, 0, 1)
+    elseif type == "Square" then
+        instance = Instance.new("Frame")
+        instance.BorderSizePixel = 0
+        instance.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+        instance.BackgroundTransparency = 1
+        instance.AnchorPoint = Vector2.new(0.5, 0.5)
+        instance.Position = UDim2.new(0, 0, 0, 0)
+        instance.Size = UDim2.new(0, 100, 0, 100)
+
+        local stroke = Instance.new("UIStroke")
+        stroke.Color = Color3.fromRGB(255, 0, 0)
+        stroke.Thickness = 1
+        stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+        stroke.Parent = instance
+    elseif type == "Text" then
+        instance = Instance.new("TextLabel")
+        instance.Size = UDim2.new(0, 100, 0, 20)
+        instance.AnchorPoint = Vector2.new(0.5, 1)
+        instance.BackgroundTransparency = 1
+        instance.TextColor3 = Color3.fromRGB(255, 0, 0)
+        instance.TextStrokeTransparency = 1
+        instance.TextScaled = true
+        instance.Text = "Sample Text"
+        instance.Position = UDim2.new(0, 0, 0, 0)
+    end
+    instance.Parent = parent
+    return instance
+end
+
+local function getOrCreateScreenGui()
+    local coreGui = game:GetService("CoreGui")
+
+    for _, child in pairs(coreGui:GetChildren()) do
+        if child:IsA("ScreenGui") and child.Name == "DrawingScreenGui" then
+            return child
+        end
+    end
+
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Name = "DrawingScreenGui"
+    screenGui.ResetOnSpawn = false
+    screenGui.Parent = coreGui
+
+    local camera = game:GetService("Workspace").CurrentCamera
+    screenGui.Size = UDim2.new(0, camera.ViewportSize.X, 0, camera.ViewportSize.Y)
+
+    return screenGui
+end
+
+local function createDrawingMetatable(drawing)
+    return {
+        __index = function(t, key)
+            if key == "Parent" then
+                return t.Instance.Parent
+            else
+                return t.Instance[key]
+            end
+        end,
+        __newindex = function(t, key, value)
+            if key == "Parent" then
+                t.Instance.Parent = value
+            elseif t.Instance[key] ~= nil then
+                t.Instance[key] = value
+            end
+        end
+    }
+end
+
+function DrawingLib.new(type, parent)
+    local drawing = {}
+    drawing.Type = type
+    drawing.Parent = parent or getOrCreateScreenGui()
+    drawing.Instance = createDrawingInstance(type, drawing.Parent)
+    setmetatable(drawing, createDrawingMetatable(drawing))
+
+    function drawing:UpdateTextProperties(properties)
+        if self.Type == "Text" then
+            for prop, value in pairs(properties) do
+                if self.Instance[prop] ~= nil then
+                    self.Instance[prop] = value
+                end
+            end
+        end
+    end
+
+    function drawing:Destroy()
+        self.Instance:Destroy()
+    end
+
+    return drawing
+end
+
+return DrawingLib
