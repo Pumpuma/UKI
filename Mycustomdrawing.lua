@@ -43,7 +43,7 @@ function Drawing.new(type)
         }
     elseif type == "Square" then
         return {
-            create = function(centerPos, width, height, color, strokeColor, strokeThickness, transparency, zIndex, cornerRadius, borderColor, borderSize)
+            create = function(centerPos, width, height, color, outerStrokeColor, outerStrokeThickness, innerStrokeColor, innerStrokeThickness, transparency, zIndex, cornerRadius, borderColor, borderSize, doubleBorder)
                 local square = createElement("Frame", screenGui, {
                     BorderSizePixel = borderSize or 0,
                     BackgroundColor3 = color,
@@ -54,10 +54,26 @@ function Drawing.new(type)
                     ZIndex = zIndex or 1
                 })
 
-                if strokeColor and strokeThickness then
+                if outerStrokeColor and outerStrokeThickness then
                     createElement("UIStroke", square, {
-                        Color = strokeColor,
-                        Thickness = strokeThickness,
+                        Color = outerStrokeColor,
+                        Thickness = outerStrokeThickness,
+                        ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+                    })
+                end
+
+                if innerStrokeColor and innerStrokeThickness and doubleBorder then
+                    local innerBorder = createElement("Frame", square, {
+                        BorderSizePixel = 0,
+                        BackgroundColor3 = innerStrokeColor,
+                        Size = UDim2.new(1, -outerStrokeThickness * 2, 1, -outerStrokeThickness * 2),
+                        Position = UDim2.new(0, outerStrokeThickness, 0, outerStrokeThickness),
+                        ZIndex = zIndex or 1
+                    })
+
+                    createElement("UIStroke", innerBorder, {
+                        Color = innerStrokeColor,
+                        Thickness = innerStrokeThickness,
                         ApplyStrokeMode = Enum.ApplyStrokeMode.Border
                     })
                 end
@@ -80,7 +96,7 @@ function Drawing.new(type)
         }
     elseif type == "Text" then
         return {
-            create = function(position, text, color, textSize, font, transparency, zIndex, textStrokeColor, textStrokeTransparency, textOutline, textWrap)
+            create = function(position, text, color, textSize, font, transparency, zIndex, textStrokeColor, textStrokeTransparency, textOutline, textWrap, outline)
                 local textLabel = createElement("TextLabel", screenGui, {
                     Text = text,
                     Size = UDim2.new(0, textSize or 100, 0, 12),
@@ -98,12 +114,21 @@ function Drawing.new(type)
                     TextXAlignment = textOutline or Enum.TextXAlignment.Left,
                     ZIndex = zIndex or 1
                 })
+
+                if outline then
+                    createElement("UIStroke", textLabel, {
+                        Color = textStrokeColor or color,
+                        Thickness = 2,
+                        ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+                    })
+                end
+
                 return textLabel
             end
         }
     elseif type == "Circle" then
         return {
-            create = function(centerPos, diameter, color, strokeColor, strokeThickness, transparency, zIndex, cornerRadius, borderColor, borderSize)
+            create = function(centerPos, diameter, color, outerStrokeColor, outerStrokeThickness, innerStrokeColor, innerStrokeThickness, transparency, zIndex, cornerRadius, borderColor, borderSize, doubleBorder)
                 local circle = createElement("Frame", screenGui, {
                     BorderSizePixel = borderSize or 0,
                     BackgroundColor3 = color,
@@ -115,10 +140,27 @@ function Drawing.new(type)
                     ZIndex = zIndex or 1
                 })
 
-                if strokeColor and strokeThickness then
+                if outerStrokeColor and outerStrokeThickness then
                     createElement("UIStroke", circle, {
-                        Color = strokeColor,
-                        Thickness = strokeThickness,
+                        Color = outerStrokeColor,
+                        Thickness = outerStrokeThickness,
+                        ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+                    })
+                end
+
+                if innerStrokeColor and innerStrokeThickness and doubleBorder then
+                    local innerBorder = createElement("Frame", circle, {
+                        BorderSizePixel = 0,
+                        BackgroundColor3 = innerStrokeColor,
+                        Size = UDim2.new(1, -outerStrokeThickness * 2, 1, -outerStrokeThickness * 2),
+                        Position = UDim2.new(0, outerStrokeThickness, 0, outerStrokeThickness),
+                        ClipsDescendants = true,
+                        ZIndex = zIndex or 1
+                    })
+
+                    createElement("UIStroke", innerBorder, {
+                        Color = innerStrokeColor,
+                        Thickness = innerStrokeThickness,
                         ApplyStrokeMode = Enum.ApplyStrokeMode.Border
                     })
                 end
