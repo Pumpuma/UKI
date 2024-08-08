@@ -1,4 +1,3 @@
--- DrawingModule.lua
 local Drawing = {}
 
 -- Helper function to create a UIElement
@@ -11,21 +10,13 @@ local function createElement(type, parent, properties)
     return element
 end
 
--- Function to get or create a ScreenGui in CoreGui
-local function getOrCreateScreenGui()
-    local coreGui = game:GetService("CoreGui")
-    local screenGui = coreGui:FindFirstChild("DrawingScreenGui")
-    if not screenGui then
-        screenGui = Instance.new("ScreenGui")
-        screenGui.Name = "DrawingScreenGui"
-        screenGui.Parent = coreGui
-    end
-    return screenGui
-end
+-- Directly create a ScreenGui and assign it to a variable
+local coreGui = game:GetService("CoreGui")
+local screenGui = coreGui:FindFirstChild("DrawingScreenGui") or Instance.new("ScreenGui")
+screenGui.Name = "DrawingScreenGui"
+screenGui.Parent = coreGui
 
 function Drawing.new(type)
-    local screenGui = getOrCreateScreenGui()
-
     if type == "Line" then
         return {
             create = function(startPos, endPos, color, thickness, transparency, zIndex, rotation, strokeColor, strokeThickness)
