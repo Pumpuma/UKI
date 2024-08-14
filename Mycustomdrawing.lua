@@ -1,26 +1,24 @@
--- DrawingModule.lua
 local Drawing = {}
 
 function Drawing.new(type)
     if type == "Line" then
         return {
-            create = function(parent, startPos, endPos, color, thickness, dashLength)
+            create = function(parent, startPos, endPos, color, thickness)
                 local line = Instance.new("Frame")
                 line.BorderSizePixel = 0
                 line.BackgroundColor3 = color
                 line.AnchorPoint = Vector2.new(0.5, 0.5)
                 line.Size = UDim2.new(0, (startPos - endPos).Magnitude, 0, thickness)
-                line.Position = UDim2.new(0, (startPos + endPos).X / 2, 0, (startPos + endPos).Y / 2)
+                line.Position = UDim2.new(0, (startPos.X + endPos.X) / 2, 0, (startPos.Y + endPos.Y) / 2)
                 line.Rotation = math.deg(math.atan2(endPos.Y - startPos.Y, endPos.X - startPos.X))
                 line.Parent = parent
                 return {
                     line = line,
-                    update = function(self, startPos, endPos, color, thickness, dashLength)
+                    update = function(self, startPos, endPos, color, thickness)
                         self.line.BackgroundColor3 = color
                         self.line.Size = UDim2.new(0, (startPos - endPos).Magnitude, 0, thickness)
-                        self.line.Position = UDim2.new(0, (startPos + endPos).X / 2, 0, (startPos + endPos).Y / 2)
+                        self.line.Position = UDim2.new(0, (startPos.X + endPos.X) / 2, 0, (startPos.Y + endPos.Y) / 2)
                         self.line.Rotation = math.deg(math.atan2(endPos.Y - startPos.Y, endPos.X - startPos.X))
-                        -- Note: Dash length is not implemented in Roblox, but you can simulate dashes by using multiple lines.
                     end
                 }
             end
