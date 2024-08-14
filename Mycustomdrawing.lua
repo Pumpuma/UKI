@@ -62,6 +62,15 @@ function Drawing.new(type)
                         if corner and newCornerRadius then
                             corner.CornerRadius = UDim.new(newCornerRadius, 0)
                         end
+                    end,
+                    setFillColor = function(newFillColor)
+                        square.BackgroundColor3 = newFillColor or square.BackgroundColor3
+                    end,
+                    setBorderColor = function(newBorderColor)
+                        local stroke = square:FindFirstChildOfClass("UIStroke")
+                        if stroke then
+                            stroke.Color = newBorderColor or stroke.Color
+                        end
                     end
                 }
             end
@@ -101,13 +110,22 @@ function Drawing.new(type)
                             stroke.Color = newBorderColor or stroke.Color
                             stroke.Thickness = newBorderThickness or stroke.Thickness
                         end
+                    end,
+                    setFillColor = function(newFillColor)
+                        circle.BackgroundColor3 = newFillColor or circle.BackgroundColor3
+                    end,
+                    setBorderColor = function(newBorderColor)
+                        local stroke = circle:FindFirstChildOfClass("UIStroke")
+                        if stroke then
+                            stroke.Color = newBorderColor or stroke.Color
+                        end
                     end
                 }
             end
         }
     elseif type == "Text" then
         return {
-            create = function(parent, position, text, textColor, textSize, textStrokeColor, textStrokeTransparency, textFont, textBold, textItalic)
+            create = function(parent, position, text, textColor, textSize, textStrokeColor, textStrokeTransparency)
                 local textLabel = Instance.new("TextLabel")
                 textLabel.Text = text
                 textLabel.Size = UDim2.new(0, 100, 0, textSize)
@@ -119,21 +137,15 @@ function Drawing.new(type)
                 textLabel.TextStrokeTransparency = textStrokeTransparency or 0
                 textLabel.TextScaled = true
                 textLabel.RichText = true
-                textLabel.TextFont = textFont or Enum.Font.SourceSans
-                textLabel.TextBold = textBold or false
-                textLabel.TextItalic = textItalic or false
                 textLabel.Parent = parent
                 return {
-                    update = function(newPosition, newText, newTextColor, newTextSize, newTextStrokeColor, newTextStrokeTransparency, newTextFont, newTextBold, newTextItalic)
+                    update = function(newPosition, newText, newTextColor, newTextSize, newTextStrokeColor, newTextStrokeTransparency)
                         textLabel.Text = newText or textLabel.Text
                         textLabel.Size = UDim2.new(0, textLabel.TextBounds.X, 0, newTextSize or textSize)
                         textLabel.Position = UDim2.new(0, newPosition.X or position.X, 0, newPosition.Y or position.Y)
                         textLabel.TextColor3 = newTextColor or textLabel.TextColor3
                         textLabel.TextStrokeColor3 = newTextStrokeColor or textLabel.TextStrokeColor3
                         textLabel.TextStrokeTransparency = newTextStrokeTransparency or textLabel.TextStrokeTransparency
-                        textLabel.TextFont = newTextFont or textLabel.TextFont
-                        textLabel.TextBold = newTextBold or textLabel.TextBold
-                        textLabel.TextItalic = newTextItalic or textLabel.TextItalic
                     end
                 }
             end
