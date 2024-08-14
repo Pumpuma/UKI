@@ -13,12 +13,11 @@ function Drawing.new(type)
                 line.Rotation = math.deg(math.atan2(endPos.Y - startPos.Y, endPos.X - startPos.X))
                 line.Parent = parent
                 return {
-                    line = line,
-                    update = function(self, startPos, endPos, color, thickness)
-                        self.line.BackgroundColor3 = color
-                        self.line.Size = UDim2.new(0, (startPos - endPos).Magnitude, 0, thickness)
-                        self.line.Position = UDim2.new(0, (startPos.X + endPos.X) / 2, 0, (startPos.Y + endPos.Y) / 2)
-                        self.line.Rotation = math.deg(math.atan2(endPos.Y - startPos.Y, endPos.X - startPos.X))
+                    update = function(_, newStartPos, newEndPos, newColor, newThickness)
+                        line.BackgroundColor3 = newColor or line.BackgroundColor3
+                        line.Size = UDim2.new(0, (newStartPos - newEndPos).Magnitude, 0, newThickness or thickness)
+                        line.Position = UDim2.new(0, (newStartPos.X + newEndPos.X) / 2, 0, (newStartPos.Y + newEndPos.Y) / 2)
+                        line.Rotation = math.deg(math.atan2(newEndPos.Y - newStartPos.Y, newEndPos.X - newStartPos.X))
                     end
                 }
             end
@@ -46,21 +45,20 @@ function Drawing.new(type)
 
                 square.Parent = parent
                 return {
-                    square = square,
-                    update = function(self, centerPos, width, height, fillColor, fillTransparency, borderColor, borderThickness, borderTransparency, cornerRadius)
-                        self.square.BackgroundColor3 = fillColor
-                        self.square.BackgroundTransparency = fillTransparency
-                        self.square.Size = UDim2.new(0, width, 0, height)
-                        self.square.Position = UDim2.new(0, centerPos.X, 0, centerPos.Y)
-                        local stroke = self.square:FindFirstChildOfClass("UIStroke")
+                    update = function(_, newCenterPos, newWidth, newHeight, newFillColor, newFillTransparency, newBorderColor, newBorderThickness, newBorderTransparency, newCornerRadius)
+                        square.BackgroundColor3 = newFillColor or square.BackgroundColor3
+                        square.BackgroundTransparency = newFillTransparency or square.BackgroundTransparency
+                        square.Size = UDim2.new(0, newWidth or width, 0, newHeight or height)
+                        square.Position = UDim2.new(0, newCenterPos.X or centerPos.X, 0, newCenterPos.Y or centerPos.Y)
+                        local stroke = square:FindFirstChildOfClass("UIStroke")
                         if stroke then
-                            stroke.Color = borderColor or stroke.Color
-                            stroke.Thickness = borderThickness or stroke.Thickness
-                            stroke.Transparency = borderTransparency or stroke.Transparency
+                            stroke.Color = newBorderColor or stroke.Color
+                            stroke.Thickness = newBorderThickness or stroke.Thickness
+                            stroke.Transparency = newBorderTransparency or stroke.Transparency
                         end
-                        local corner = self.square:FindFirstChildOfClass("UICorner")
+                        local corner = square:FindFirstChildOfClass("UICorner")
                         if corner then
-                            corner.CornerRadius = UDim.new(cornerRadius or 0, 0)
+                            corner.CornerRadius = UDim.new(newCornerRadius or 0, 0)
                         end
                     end
                 }
@@ -85,17 +83,16 @@ function Drawing.new(type)
                 textLabel.TextItalic = textItalic or false
                 textLabel.Parent = parent
                 return {
-                    textLabel = textLabel,
-                    update = function(self, position, text, textColor, textSize, textStrokeColor, textStrokeTransparency, textFont, textBold, textItalic)
-                        self.textLabel.Text = text
-                        self.textLabel.Size = UDim2.new(0, self.textLabel.TextBounds.X, 0, textSize)
-                        self.textLabel.Position = UDim2.new(0, position.X, 0, position.Y)
-                        self.textLabel.TextColor3 = textColor
-                        self.textLabel.TextStrokeColor3 = textStrokeColor or self.textLabel.TextStrokeColor3
-                        self.textLabel.TextStrokeTransparency = textStrokeTransparency or self.textLabel.TextStrokeTransparency
-                        self.textLabel.TextFont = textFont or self.textLabel.TextFont
-                        self.textLabel.TextBold = textBold or self.textLabel.TextBold
-                        self.textLabel.TextItalic = textItalic or self.textLabel.TextItalic
+                    update = function(_, newPosition, newText, newTextColor, newTextSize, newTextStrokeColor, newTextStrokeTransparency, newTextFont, newTextBold, newTextItalic)
+                        textLabel.Text = newText or textLabel.Text
+                        textLabel.Size = UDim2.new(0, textLabel.TextBounds.X, 0, newTextSize or textSize)
+                        textLabel.Position = UDim2.new(0, newPosition.X or position.X, 0, newPosition.Y or position.Y)
+                        textLabel.TextColor3 = newTextColor or textLabel.TextColor3
+                        textLabel.TextStrokeColor3 = newTextStrokeColor or textLabel.TextStrokeColor3
+                        textLabel.TextStrokeTransparency = newTextStrokeTransparency or textLabel.TextStrokeTransparency
+                        textLabel.TextFont = newTextFont or textLabel.TextFont
+                        textLabel.TextBold = newTextBold or textLabel.TextBold
+                        textLabel.TextItalic = newTextItalic or textLabel.TextItalic
                     end
                 }
             end
@@ -125,19 +122,18 @@ function Drawing.new(type)
 
                 circle.Parent = parent
                 return {
-                    circle = circle,
-                    update = function(self, centerPos, diameter, fillColor, fillTransparency, borderColor, borderThickness, borderTransparency, rotation)
-                        self.circle.BackgroundColor3 = fillColor
-                        self.circle.BackgroundTransparency = fillTransparency
-                        self.circle.Size = UDim2.new(0, diameter, 0, diameter)
-                        self.circle.Position = UDim2.new(0, centerPos.X, 0, centerPos.Y)
-                        local stroke = self.circle:FindFirstChildOfClass("UIStroke")
+                    update = function(_, newCenterPos, newDiameter, newFillColor, newFillTransparency, newBorderColor, newBorderThickness, newBorderTransparency, newRotation)
+                        circle.BackgroundColor3 = newFillColor or circle.BackgroundColor3
+                        circle.BackgroundTransparency = newFillTransparency or circle.BackgroundTransparency
+                        circle.Size = UDim2.new(0, newDiameter or diameter, 0, newDiameter or diameter)
+                        circle.Position = UDim2.new(0, newCenterPos.X or centerPos.X, 0, newCenterPos.Y or centerPos.Y)
+                        local stroke = circle:FindFirstChildOfClass("UIStroke")
                         if stroke then
-                            stroke.Color = borderColor or stroke.Color
-                            stroke.Thickness = borderThickness or stroke.Thickness
-                            stroke.Transparency = borderTransparency or stroke.Transparency
+                            stroke.Color = newBorderColor or stroke.Color
+                            stroke.Thickness = newBorderThickness or stroke.Thickness
+                            stroke.Transparency = newBorderTransparency or stroke.Transparency
                         end
-                        self.circle.Rotation = rotation or self.circle.Rotation
+                        circle.Rotation = newRotation or circle.Rotation
                     end
                 }
             end
