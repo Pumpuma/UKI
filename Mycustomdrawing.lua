@@ -18,20 +18,22 @@ function Drawing.new(type)
         }
     elseif type == "Square" then
         return {
-            create = function(parent, centerPos, width, height, color, strokeColor, strokeThickness)
+            create = function(parent, centerPos, width, height, color, strokeColor, strokeThickness, filled)
                 local square = Instance.new("Frame")
-                square.BorderSizePixel = 0
                 square.BackgroundColor3 = color
-                square.BackgroundTransparency = 1
+                square.BackgroundTransparency = filled and 0 or 1
                 square.Size = UDim2.new(0, width, 0, height)
                 square.AnchorPoint = Vector2.new(0.5, 0.5)
                 square.Position = UDim2.new(0, centerPos.X, 0, centerPos.Y)
 
-                local stroke = Instance.new("UIStroke")
-                stroke.Color = strokeColor
-                stroke.Thickness = strokeThickness
-                stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-                stroke.Parent = square
+                if strokeColor and strokeThickness then
+                    local border = Instance.new("Frame")
+                    border.BorderSizePixel = strokeThickness
+                    border.BorderColor3 = strokeColor
+                    border.Size = UDim2.new(1, 0, 1, 0)
+                    border.Position = UDim2.new(0, -strokeThickness / 2, 0, -strokeThickness / 2)
+                    border.Parent = square
+                end
 
                 square.Parent = parent
                 return square
@@ -56,21 +58,23 @@ function Drawing.new(type)
         }
     elseif type == "Circle" then
         return {
-            create = function(parent, centerPos, diameter, color, strokeColor, strokeThickness)
+            create = function(parent, centerPos, diameter, color, strokeColor, strokeThickness, filled)
                 local circle = Instance.new("Frame")
-                circle.BorderSizePixel = 0
                 circle.BackgroundColor3 = color
-                circle.BackgroundTransparency = 1
+                circle.BackgroundTransparency = filled and 0 or 1
                 circle.Size = UDim2.new(0, diameter, 0, diameter)
                 circle.AnchorPoint = Vector2.new(0.5, 0.5)
                 circle.Position = UDim2.new(0, centerPos.X, 0, centerPos.Y)
                 circle.ClipsDescendants = true
 
-                local stroke = Instance.new("UIStroke")
-                stroke.Color = strokeColor
-                stroke.Thickness = strokeThickness
-                stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-                stroke.Parent = circle
+                if strokeColor and strokeThickness then
+                    local border = Instance.new("Frame")
+                    border.BorderSizePixel = strokeThickness
+                    border.BorderColor3 = strokeColor
+                    border.Size = UDim2.new(1, 0, 1, 0)
+                    border.Position = UDim2.new(0, -strokeThickness / 2, 0, -strokeThickness / 2)
+                    border.Parent = circle
+                end
 
                 local cornerRadius = Instance.new("UICorner")
                 cornerRadius.CornerRadius = UDim.new(0.5, 0)
