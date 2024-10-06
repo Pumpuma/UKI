@@ -1,284 +1,309 @@
-
-local v0 = _G['tonumber'];
-local v1 = _G['string'].byte;
-local v2 = _G['string'].char;
-local v3 = _G['string'].sub;
-local v4 = _G['string'].gsub;
-local v5 = _G['string'].rep;
-local v6 = _G['table'].concat;
-local v7 = _G['table'].insert;
-local v8 = _G['math'].ldexp;
-local v9 = _G['getfenv'] or function()
+bit32 = {};
+local N = 32;
+local P = 2 ^ N;
+bit32.bnot = function(x)
+	x = x % P;
+	return (P - 1) - x;
+end;
+bit32.band = function(x, y)
+	if (y == 255) then
+		return x % 256;
+	end
+	if (y == 65535) then
+		return x % 65536;
+	end
+	if (y == 4294967295) then
+		return x % 4294967296;
+	end
+	x, y = x % P, y % P;
+	local r = 0;
+	local p = 1;
+	for i = 1, N do
+		local a, b = x % 2, y % 2;
+		x, y = math.floor(x / 2), math.floor(y / 2);
+		if ((a + b) == 2) then
+			r = r + p;
+		end
+		p = 2 * p;
+	end
+	return r;
+end;
+bit32.bor = function(x, y)
+	if (y == 255) then
+		return (x - (x % 256)) + 255;
+	end
+	if (y == 65535) then
+		return (x - (x % 65536)) + 65535;
+	end
+	if (y == 4294967295) then
+		return 4294967295;
+	end
+	x, y = x % P, y % P;
+	local r = 0;
+	local p = 1;
+	for i = 1, N do
+		local a, b = x % 2, y % 2;
+		x, y = math.floor(x / 2), math.floor(y / 2);
+		if ((a + b) >= 1) then
+			r = r + p;
+		end
+		p = 2 * p;
+	end
+	return r;
+end;
+bit32.bxor = function(x, y)
+	x, y = x % P, y % P;
+	local r = 0;
+	local p = 1;
+	for i = 1, N do
+		local a, b = x % 2, y % 2;
+		x, y = math.floor(x / 2), math.floor(y / 2);
+		if ((a + b) == 1) then
+			r = r + p;
+		end
+		p = 2 * p;
+	end
+	return r;
+end;
+bit32.lshift = function(x, s_amount)
+	if (math.abs(s_amount) >= N) then
+		return 0;
+	end
+	x = x % P;
+	if (s_amount < 0) then
+		return math.floor(x * (2 ^ s_amount));
+	else
+		return (x * (2 ^ s_amount)) % P;
+	end
+end;
+bit32.rshift = function(x, s_amount)
+	if (math.abs(s_amount) >= N) then
+		return 0;
+	end
+	x = x % P;
+	if (s_amount > 0) then
+		return math.floor(x * (2 ^ -s_amount));
+	else
+		return (x * (2 ^ -s_amount)) % P;
+	end
+end;
+bit32.arshift = function(x, s_amount)
+	if (math.abs(s_amount) >= N) then
+		return 0;
+	end
+	x = x % P;
+	if (s_amount > 0) then
+		local add = 0;
+		if (x >= (P / 2)) then
+			add = P - (2 ^ (N - s_amount));
+		end
+		return math.floor(x * (2 ^ -s_amount)) + add;
+	else
+		return (x * (2 ^ -s_amount)) % P;
+	end
+end;
+local TABLE_TableIndirection = {};
+TABLE_TableIndirection["v0%0"] = tonumber;
+TABLE_TableIndirection["v1%0"] = string.byte;
+TABLE_TableIndirection["v2%0"] = string.char;
+TABLE_TableIndirection["v3%0"] = string.sub;
+TABLE_TableIndirection["v4%0"] = string.gsub;
+TABLE_TableIndirection["v5%0"] = string.rep;
+TABLE_TableIndirection["v6%0"] = table.concat;
+TABLE_TableIndirection["v7%0"] = table.insert;
+TABLE_TableIndirection["v8%0"] = math.ldexp;
+TABLE_TableIndirection["v9%0"] = getfenv or function()
 	return _ENV;
 end;
-local v10 = _G['setmetatable'];
-local v11 = _G['pcall'];
-local v12 = _G['select'];
-local v13 = _G['unpack'] or _G['table'].unpack;
-local v14 = _G['tonumber'];
+TABLE_TableIndirection["v10%0"] = setmetatable;
+TABLE_TableIndirection["v11%0"] = pcall;
+TABLE_TableIndirection["v12%0"] = select;
+TABLE_TableIndirection["v13%0"] = unpack or table.unpack;
+TABLE_TableIndirection["v14%0"] = tonumber;
 local function v15(v16, v17, ...)
-	local v18 = 1;
-	local v19;
-	v16 = v4(v3(v16, 5), "..", function(v30)
-		if (v1(v30, 2) == 81) then
-			local FlatIdent_7126A = 0;
-			local v87;
+	TABLE_TableIndirection["v18%0"] = 1;
+	TABLE_TableIndirection["v19%0"] = nil;
+	v16 = TABLE_TableIndirection["v4%0"](TABLE_TableIndirection["v3%0"](v16, 5), "..", function(v30)
+		if ((TABLE_TableIndirection["v1%0"](v30, 2) == 81) or (4593 <= 2672)) then
+			TABLE_TableIndirection["v81%0"] = 0;
 			while true do
-				if (FlatIdent_7126A == 0) then
-					v87 = 0;
+				if (TABLE_TableIndirection["v81%0"] == 0) then
+					TABLE_TableIndirection["FlatIdent_24A02%0"] = 0;
 					while true do
-						if (v87 == 0) then
-							local FlatIdent_12703 = 0;
-							while true do
-								if (FlatIdent_12703 == 0) then
-									v19 = v0(v3(v30, 1, 1));
-									return "";
-								end
-							end
+						if (TABLE_TableIndirection["FlatIdent_24A02%0"] == 0) then
+							TABLE_TableIndirection["v19%0"] = TABLE_TableIndirection["v0%0"](TABLE_TableIndirection["v3%0"](v30, 1, 1));
+							return "";
 						end
 					end
-					break;
 				end
 			end
 		else
-			local FlatIdent_2BD95 = 0;
-			local v88;
-			local v89;
+			TABLE_TableIndirection["FlatIdent_7126A%0"] = 0;
+			TABLE_TableIndirection["v82%0"] = nil;
 			while true do
-				if (FlatIdent_2BD95 == 1) then
-					while true do
-						if (v88 == 0) then
-							v89 = v2(v0(v30, 16));
-							if v19 then
-								local v123 = 0;
-								local v124;
-								while true do
-									if (v123 == 1) then
-										return v124;
-									end
-									if (v123 == 0) then
-										v124 = v5(v89, v19);
-										v19 = nil;
-										v123 = 1;
-									end
-								end
-							else
-								return v89;
-							end
-							break;
-						end
+				if (TABLE_TableIndirection["FlatIdent_7126A%0"] == 0) then
+					TABLE_TableIndirection["v82%0"] = TABLE_TableIndirection["v2%0"](TABLE_TableIndirection["v0%0"](v30, 16));
+					if TABLE_TableIndirection["v19%0"] then
+						TABLE_TableIndirection["v88%0"] = TABLE_TableIndirection["v5%0"](TABLE_TableIndirection["v82%0"], TABLE_TableIndirection["v19%0"]);
+						TABLE_TableIndirection["v19%0"] = nil;
+						return TABLE_TableIndirection["v88%0"];
+					else
+						return TABLE_TableIndirection["v82%0"];
 					end
 					break;
-				end
-				if (FlatIdent_2BD95 == 0) then
-					v88 = 0;
-					v89 = nil;
-					FlatIdent_2BD95 = 1;
 				end
 			end
 		end
 	end);
 	local function v20(v31, v32, v33)
-		if v33 then
-			local FlatIdent_8199B = 0;
-			local v90;
+		if (v33 or (1168 > 3156)) then
+			TABLE_TableIndirection["FlatIdent_12703%0"] = 0;
+			TABLE_TableIndirection["v83%0"] = nil;
 			while true do
-				if (FlatIdent_8199B == 0) then
-					v90 = (v31 / ((5 - (3 + 0)) ^ (v32 - (2 - 1)))) % ((3 - 1) ^ (((v33 - ((2 - 0) - 1)) - (v32 - 1)) + 1 + 0));
-					return v90 - (v90 % (620 - (555 + 64)));
+				if (TABLE_TableIndirection["FlatIdent_12703%0"] == 0) then
+					TABLE_TableIndirection["v83%0"] = (v31 / ((570 - ((1597 - 1230) + 201)) ^ (v32 - (928 - (214 + (1983 - (226 + 1044))))))) % ((1 + 1) ^ (((v33 - ((119 - (32 + 85)) - 1)) - (v32 - (2 - 1))) + (1 - 0)));
+					return TABLE_TableIndirection["v83%0"] - (TABLE_TableIndirection["v83%0"] % 1);
 				end
 			end
 		else
-			local v91 = (1 + 1) ^ (v32 - ((1943 - (68 + 997)) - ((1552 - (226 + 1044)) + 595)));
-			return (((v31 % (v91 + v91)) >= v91) and ((7132 - 5494) - (1523 + 114))) or 0;
+			TABLE_TableIndirection["FlatIdent_2BD95%0"] = 0;
+			TABLE_TableIndirection["v84%0"] = nil;
+			while true do
+				if (TABLE_TableIndirection["FlatIdent_2BD95%0"] == 0) then
+					TABLE_TableIndirection["v84%0"] = (4 - 2) ^ (v32 - 1);
+					return (((v31 % (TABLE_TableIndirection["v84%0"] + TABLE_TableIndirection["v84%0"])) >= TABLE_TableIndirection["v84%0"]) and (620 - (544 + 11 + 64))) or (931 - (857 + 17 + 57));
+				end
+			end
 		end
 	end
 	local function v21()
-		local FlatIdent_39B0 = 0;
-		local v34;
+		TABLE_TableIndirection["FlatIdent_23BE8%0"] = 0;
+		TABLE_TableIndirection["v34%0"] = nil;
 		while true do
-			if (FlatIdent_39B0 == 0) then
-				v34 = v1(v16, v18, v18);
-				v18 = v18 + 1;
-				FlatIdent_39B0 = 1;
+			if (1 == TABLE_TableIndirection["FlatIdent_23BE8%0"]) then
+				return TABLE_TableIndirection["v34%0"];
 			end
-			if (FlatIdent_39B0 == 1) then
-				return v34;
+			if (TABLE_TableIndirection["FlatIdent_23BE8%0"] == 0) then
+				TABLE_TableIndirection["v34%0"] = TABLE_TableIndirection["v1%0"](v16, TABLE_TableIndirection["v18%0"], TABLE_TableIndirection["v18%0"]);
+				TABLE_TableIndirection["v18%0"] = TABLE_TableIndirection["v18%0"] + 1;
+				TABLE_TableIndirection["FlatIdent_23BE8%0"] = 1;
 			end
 		end
 	end
 	local function v22()
-		local FlatIdent_61585 = 0;
-		local v35;
-		local v36;
-		local v37;
+		TABLE_TableIndirection["v35%0"] = 957 - (892 + 65);
+		TABLE_TableIndirection["v36%0"] = nil;
+		TABLE_TableIndirection["v37%0"] = nil;
 		while true do
-			if (1 == FlatIdent_61585) then
-				v37 = nil;
+			if ((TABLE_TableIndirection["v35%0"] == (0 - (0 + 0))) or (572 > 4486)) then
+				TABLE_TableIndirection["FlatIdent_31A5A%0"] = 0;
 				while true do
-					local FlatIdent_1BCFB = 0;
-					while true do
-						if (FlatIdent_1BCFB == 0) then
-							if (v35 == ((350 - (87 + 263)) + 0)) then
-								local FlatIdent_7FAC9 = 0;
-								while true do
-									if (FlatIdent_7FAC9 == 1) then
-										v35 = 958 - (892 + 65);
-										break;
-									end
-									if (0 == FlatIdent_7FAC9) then
-										v36, v37 = v1(v16, v18, v18 + 1 + 1);
-										v18 = v18 + 2;
-										FlatIdent_7FAC9 = 1;
-									end
-								end
-							end
-							if (v35 == ((182 - (67 + 113)) - 1)) then
-								return (v37 * (472 - 216)) + v36;
-							end
-							break;
-						end
+					if (TABLE_TableIndirection["FlatIdent_31A5A%0"] == 1) then
+						TABLE_TableIndirection["v35%0"] = 1 - 0;
+						break;
+					end
+					if (TABLE_TableIndirection["FlatIdent_31A5A%0"] == 0) then
+						TABLE_TableIndirection["v36%0"], TABLE_TableIndirection["v37%0"] = TABLE_TableIndirection["v1%0"](v16, TABLE_TableIndirection["v18%0"], TABLE_TableIndirection["v18%0"] + (4 - 2));
+						TABLE_TableIndirection["v18%0"] = TABLE_TableIndirection["v18%0"] + (3 - 1);
+						TABLE_TableIndirection["FlatIdent_31A5A%0"] = 1;
 					end
 				end
-				break;
 			end
-			if (0 == FlatIdent_61585) then
-				v35 = 117 - ((58 - 26) + 85);
-				v36 = nil;
-				FlatIdent_61585 = 1;
+			if ((1404 == 1404) and (TABLE_TableIndirection["v35%0"] == (351 - (64 + 23 + 263)))) then
+				return (TABLE_TableIndirection["v37%0"] * (436 - (67 + 113))) + TABLE_TableIndirection["v36%0"];
 			end
 		end
 	end
 	local function v23()
-		local v38, v39, v40, v41 = v1(v16, v18, v18 + 3);
-		v18 = v18 + 3 + 1;
-		return (v41 * (41190819 - 24413603)) + (v40 * (48199 + 17337)) + (v39 * (1017 - 761)) + v38;
+		TABLE_TableIndirection["FlatIdent_31905%0"] = 0;
+		TABLE_TableIndirection["v38%0"] = nil;
+		TABLE_TableIndirection["v39%0"] = nil;
+		TABLE_TableIndirection["v40%0"] = nil;
+		TABLE_TableIndirection["v41%0"] = nil;
+		while true do
+			if (TABLE_TableIndirection["FlatIdent_31905%0"] == 1) then
+				return (TABLE_TableIndirection["v41%0"] * 16777216) + (TABLE_TableIndirection["v40%0"] * (66488 - (802 + 150))) + (TABLE_TableIndirection["v39%0"] * (689 - 433)) + TABLE_TableIndirection["v38%0"];
+			end
+			if (0 == TABLE_TableIndirection["FlatIdent_31905%0"]) then
+				TABLE_TableIndirection["v38%0"], TABLE_TableIndirection["v39%0"], TABLE_TableIndirection["v40%0"], TABLE_TableIndirection["v41%0"] = TABLE_TableIndirection["v1%0"](v16, TABLE_TableIndirection["v18%0"], TABLE_TableIndirection["v18%0"] + (11 - 8));
+				TABLE_TableIndirection["v18%0"] = TABLE_TableIndirection["v18%0"] + 4;
+				TABLE_TableIndirection["FlatIdent_31905%0"] = 1;
+			end
+		end
 	end
 	local function v24()
-		local v42 = (303 + 649) - (657 + 145 + (922 - (201 + 571)));
-		local v43;
-		local v44;
-		local v45;
-		local v46;
-		local v47;
-		local v48;
+		TABLE_TableIndirection["v42%0"] = v23();
+		TABLE_TableIndirection["v43%0"] = v23();
+		TABLE_TableIndirection["v44%0"] = 1 - 0;
+		TABLE_TableIndirection["v45%0"] = (v20(TABLE_TableIndirection["v43%0"], 1, 20) * ((2 + 0) ^ (1029 - (915 + 82)))) + TABLE_TableIndirection["v42%0"];
+		TABLE_TableIndirection["v46%0"] = v20(TABLE_TableIndirection["v43%0"], (35 - 25) + (870 - (814 + 45)), 54 - (56 - 33));
+		TABLE_TableIndirection["v47%0"] = ((v20(TABLE_TableIndirection["v43%0"], 90 - (241 - 183)) == (1 + 0)) and -(1 - 0)) or (1188 - (1069 + 118));
+		if (TABLE_TableIndirection["v46%0"] == (0 - 0)) then
+			if ((TABLE_TableIndirection["v45%0"] == 0) or (3748 < 2212)) then
+				return TABLE_TableIndirection["v47%0"] * (0 + 0);
+			else
+				TABLE_TableIndirection["v46%0"] = 1 - (0 + 0);
+				TABLE_TableIndirection["v44%0"] = 0 + 0;
+			end
+		elseif ((TABLE_TableIndirection["v46%0"] == 2047) or (1180 == 2180)) then
+			return ((TABLE_TableIndirection["v45%0"] == (0 - 0)) and (TABLE_TableIndirection["v47%0"] * (((3 - 2) + 0) / (791 - (368 + 423))))) or (TABLE_TableIndirection["v47%0"] * NaN);
+		end
+		return TABLE_TableIndirection["v8%0"](TABLE_TableIndirection["v47%0"], TABLE_TableIndirection["v46%0"] - (3214 - 2191)) * (TABLE_TableIndirection["v44%0"] + (TABLE_TableIndirection["v45%0"] / (2 ^ (70 - (10 + 8)))));
+	end
+	local function v25(v48)
+		TABLE_TableIndirection["v49%0"] = 885 - (261 + 624);
+		TABLE_TableIndirection["v50%0"] = nil;
+		TABLE_TableIndirection["v51%0"] = nil;
 		while true do
-			local FlatIdent_77C29 = 0;
+			TABLE_TableIndirection["FlatIdent_61B23%0"] = 0;
 			while true do
-				if (FlatIdent_77C29 == 0) then
-					if (v42 == 1) then
-						local FlatIdent_2AC68 = 0;
+				if (TABLE_TableIndirection["FlatIdent_61B23%0"] == 0) then
+					if ((4090 < 4653) and (TABLE_TableIndirection["v49%0"] == (4 - 1))) then
+						return TABLE_TableIndirection["v6%0"](TABLE_TableIndirection["v51%0"]);
+					end
+					if ((TABLE_TableIndirection["v49%0"] == (1081 - (1020 + 60))) or (2652 < 196)) then
+						TABLE_TableIndirection["FlatIdent_946F%0"] = 0;
 						while true do
-							if (FlatIdent_2AC68 == 0) then
-								v45 = 2 - 1;
-								v46 = (v20(v44, 1 - 0, 15 + (1143 - (116 + 1022))) * ((999 - ((3809 - 2894) + 82)) ^ 32)) + v43;
-								FlatIdent_2AC68 = 1;
+							if (TABLE_TableIndirection["FlatIdent_946F%0"] == 0) then
+								TABLE_TableIndirection["v50%0"] = TABLE_TableIndirection["v3%0"](v16, TABLE_TableIndirection["v18%0"], (TABLE_TableIndirection["v18%0"] + v48) - (1424 - (630 + (2706 - (1789 + 124)))));
+								TABLE_TableIndirection["v18%0"] = TABLE_TableIndirection["v18%0"] + v48;
+								TABLE_TableIndirection["FlatIdent_946F%0"] = 1;
 							end
-							if (FlatIdent_2AC68 == 1) then
-								v42 = 5 - 3;
+							if (TABLE_TableIndirection["FlatIdent_946F%0"] == 1) then
+								TABLE_TableIndirection["v49%0"] = 6 - (770 - (745 + 21));
 								break;
 							end
 						end
 					end
-					if (v42 == (2 + 1)) then
-						local FlatIdent_33EA4 = 0;
+					TABLE_TableIndirection["FlatIdent_61B23%0"] = 1;
+				end
+				if (TABLE_TableIndirection["FlatIdent_61B23%0"] == 1) then
+					if (TABLE_TableIndirection["v49%0"] ~= 2) then
+					else
+						TABLE_TableIndirection["v51%0"] = {};
+						for v89 = 4 - 3, #TABLE_TableIndirection["v50%0"] do
+							TABLE_TableIndirection["v51%0"][v89] = TABLE_TableIndirection["v2%0"](TABLE_TableIndirection["v1%0"](TABLE_TableIndirection["v3%0"](TABLE_TableIndirection["v50%0"], v89, v89)));
+						end
+						TABLE_TableIndirection["v49%0"] = 2 + 1;
+					end
+					if (TABLE_TableIndirection["v49%0"] ~= (0 - 0)) then
+					else
+						TABLE_TableIndirection["FlatIdent_49AED%0"] = 0;
 						while true do
-							if (FlatIdent_33EA4 == 0) then
-								if (v47 == ((0 + 0) - 0)) then
-									if (v46 == (1187 - (1069 + 118))) then
-										return v48 * 0;
+							if (TABLE_TableIndirection["FlatIdent_49AED%0"] == 1) then
+								TABLE_TableIndirection["v49%0"] = 1748 - (262 + 498 + (2715 - 1728));
+								break;
+							end
+							if (TABLE_TableIndirection["FlatIdent_49AED%0"] == 0) then
+								TABLE_TableIndirection["v50%0"] = nil;
+								if ((4135 < 4817) and not v48) then
+									v48 = v23();
+									if (v48 ~= 0) then
 									else
-										local v125 = 0 - 0;
-										while true do
-											if (v125 == 0) then
-												v47 = 1 - 0;
-												v45 = 0 + 0;
-												break;
-											end
-										end
-									end
-								elseif (v47 == ((13273 - 9637) - 1589)) then
-									return ((v46 == (0 + 0)) and (v48 * ((792 - (368 + 423)) / 0))) or (v48 * NaN);
-								end
-								return v8(v48, v47 - ((11413 - 8199) - 2191)) * (v45 + (v46 / ((20 - (10 + 8)) ^ (199 - 147))));
-							end
-						end
-					end
-					FlatIdent_77C29 = 1;
-				end
-				if (FlatIdent_77C29 == 1) then
-					if (v42 == (442 - (416 + 26))) then
-						v43 = v23();
-						v44 = v23();
-						v42 = 3 - 2;
-					end
-					if (v42 == (1 + 1)) then
-						v47 = v20(v44, 21, 31);
-						v48 = ((v20(v44, 56 - 24) == (439 - (145 + 293))) and -1) or (431 - (44 + 386));
-						v42 = 1489 - (998 + 488);
-					end
-					break;
-				end
-			end
-		end
-	end
-	local function v25(v49)
-		local v50 = (2606 - (760 + 987)) - (814 + (1958 - (1789 + 124)));
-		local v51;
-		local v52;
-		while true do
-			local FlatIdent_12544 = 0;
-			while true do
-				if (FlatIdent_12544 == 0) then
-					if (v50 == 2) then
-						v52 = {};
-						for v107 = 2 - 1, #v51 do
-							v52[v107] = v2(v1(v3(v51, v107, v107)));
-						end
-						v50 = 1 + (768 - (745 + 21));
-					end
-					if (v50 == (0 + 0)) then
-						local FlatIdent_74348 = 0;
-						while true do
-							if (FlatIdent_74348 == 1) then
-								v50 = 1424 - (630 + 273 + 520);
-								break;
-							end
-							if (FlatIdent_74348 == 0) then
-								v51 = nil;
-								if not v49 then
-									local v113 = 885 - (261 + 624);
-									while true do
-										if (v113 == (0 - 0)) then
-											v49 = v23();
-											if (v49 == (1080 - (1020 + 60))) then
-												return "";
-											end
-											break;
-										end
+										return "";
 									end
 								end
-								FlatIdent_74348 = 1;
-							end
-						end
-					end
-					FlatIdent_12544 = 1;
-				end
-				if (FlatIdent_12544 == 1) then
-					if (v50 == (9 - 6)) then
-						return v6(v52);
-					end
-					if (v50 == (4 - 3)) then
-						local FlatIdent_324DE = 0;
-						while true do
-							if (FlatIdent_324DE == 1) then
-								v50 = 6 - 4;
-								break;
-							end
-							if (0 == FlatIdent_324DE) then
-								v51 = v3(v16, v18, (v18 + v49) - (1 + 0));
-								v18 = v18 + v49;
-								FlatIdent_324DE = 1;
+								TABLE_TableIndirection["FlatIdent_49AED%0"] = 1;
 							end
 						end
 					end
@@ -287,1042 +312,392 @@ local function v15(v16, v17, ...)
 			end
 		end
 	end
-	local v26 = v23;
+	TABLE_TableIndirection["v26%0"] = v23;
 	local function v27(...)
-		return {...}, v12("#", ...);
+		return {...}, TABLE_TableIndirection["v12%0"]("#", ...);
 	end
 	local function v28()
-		local v53 = (function()
-			return function(v92, v93, v94, v95, v96, v97, v98, v99)
-				local v92 = (function()
-					return 1518 - (1191 + 327);
-				end)();
-				local v93 = (function()
+		TABLE_TableIndirection["FlatIdent_65290%0"] = 0;
+		TABLE_TableIndirection["v52%0"] = nil;
+		TABLE_TableIndirection["v53%0"] = nil;
+		TABLE_TableIndirection["v54%0"] = nil;
+		TABLE_TableIndirection["v55%0"] = nil;
+		TABLE_TableIndirection["v56%0"] = nil;
+		TABLE_TableIndirection["v57%0"] = nil;
+		TABLE_TableIndirection["v58%0"] = nil;
+		TABLE_TableIndirection["v59%0"] = nil;
+		while true do
+			if (TABLE_TableIndirection["FlatIdent_65290%0"] == 2) then
+				TABLE_TableIndirection["v56%0"] = (function()
 					return;
 				end)();
-				local v94 = (function()
+				TABLE_TableIndirection["v57%0"] = (function()
 					return;
 				end)();
+				TABLE_TableIndirection["FlatIdent_65290%0"] = 3;
+			end
+			if (TABLE_TableIndirection["FlatIdent_65290%0"] == 4) then
 				while true do
-					if (v92 ~= #"|") then
-					else
-						if (v93 == #"]") then
-							v94 = (function()
-								return v95() ~= (1665 - (970 + 695));
-							end)();
-						elseif (v93 == (1 + 1)) then
-							v94 = (function()
-								return v96();
-							end)();
-						elseif (v93 ~= #"xnx") then
-						else
-							v94 = (function()
-								return v97();
-							end)();
-						end
-						v98[v99] = (function()
-							return v94;
-						end)();
-						break;
-					end
-					if (v92 == (698 - (208 + 490))) then
-						local FlatIdent_7909D = 0;
-						local v115;
-						local v116;
-						while true do
-							if (FlatIdent_7909D == 1) then
+					TABLE_TableIndirection["v66%0"] = (function()
+						return 0 + 0;
+					end)();
+					while true do
+						if ((272 == 272) and (TABLE_TableIndirection["v66%0"] == 0)) then
+							if (TABLE_TableIndirection["v52%0"] == 1) then
+								TABLE_TableIndirection["v95%0"] = (function()
+									return 0 - 0;
+								end)();
 								while true do
-									if ((1990 - (582 + 1408)) ~= v115) then
+									if ((100 <= 3123) and (2 ~= TABLE_TableIndirection["v95%0"])) then
 									else
-										v116 = (function()
-											return 0;
+										TABLE_TableIndirection["v52%0"] = (function()
+											return 2;
 										end)();
+										break;
+									end
+									if ((TABLE_TableIndirection["v95%0"] == 1) or (1369 > 4987)) then
+										TABLE_TableIndirection["v59%0"] = (function()
+											return {};
+										end)();
+										for v116 = #"<", TABLE_TableIndirection["v58%0"] do
+											TABLE_TableIndirection["v117%0"] = (function()
+												return 1467 - (899 + 568);
+											end)();
+											TABLE_TableIndirection["v118%0"] = (function()
+												return;
+											end)();
+											TABLE_TableIndirection["v119%0"] = (function()
+												return;
+											end)();
+											TABLE_TableIndirection["v120%0"] = (function()
+												return;
+											end)();
+											while true do
+												if ((1 ~= TABLE_TableIndirection["v117%0"]) or (863 >= 4584)) then
+												else
+													TABLE_TableIndirection["v120%0"] = (function()
+														return nil;
+													end)();
+													while true do
+														if ((TABLE_TableIndirection["v118%0"] ~= 0) or (724 >= 1668)) then
+														else
+															TABLE_TableIndirection["v164%0"] = (function()
+																return 0;
+															end)();
+															TABLE_TableIndirection["v165%0"] = (function()
+																return;
+															end)();
+															while true do
+																if ((428 < 1804) and (TABLE_TableIndirection["v164%0"] == (0 + 0))) then
+																	TABLE_TableIndirection["v165%0"] = (function()
+																		return 0 - 0;
+																	end)();
+																	while true do
+																		if (TABLE_TableIndirection["v165%0"] == (604 - (268 + 335))) then
+																			TABLE_TableIndirection["v118%0"] = (function()
+																				return 1;
+																			end)();
+																			break;
+																		end
+																		if (TABLE_TableIndirection["v165%0"] ~= (290 - (60 + 230))) then
+																		else
+																			TABLE_TableIndirection["FlatIdent_8BF78%0"] = 0;
+																			while true do
+																				if (TABLE_TableIndirection["FlatIdent_8BF78%0"] == 0) then
+																					TABLE_TableIndirection["v119%0"] = (function()
+																						return v21();
+																					end)();
+																					TABLE_TableIndirection["v120%0"] = (function()
+																						return nil;
+																					end)();
+																					TABLE_TableIndirection["FlatIdent_8BF78%0"] = 1;
+																				end
+																				if (1 == TABLE_TableIndirection["FlatIdent_8BF78%0"]) then
+																					TABLE_TableIndirection["v165%0"] = (function()
+																						return 573 - (426 + 146);
+																					end)();
+																					break;
+																				end
+																			end
+																		end
+																	end
+																	break;
+																end
+															end
+														end
+														if ((TABLE_TableIndirection["v118%0"] == (1 + 0)) or (3325 > 4613)) then
+															if ((TABLE_TableIndirection["v119%0"] == #"|") or (4950 <= 4553)) then
+																TABLE_TableIndirection["v120%0"] = (function()
+																	return v21() ~= (1456 - (282 + 1174));
+																end)();
+															elseif ((2665 <= 3933) and (TABLE_TableIndirection["v119%0"] == (813 - (569 + 242)))) then
+																TABLE_TableIndirection["v120%0"] = (function()
+																	return v24();
+																end)();
+															elseif (TABLE_TableIndirection["v119%0"] ~= #"xxx") then
+															else
+																TABLE_TableIndirection["v120%0"] = (function()
+																	return v25();
+																end)();
+															end
+															TABLE_TableIndirection["v59%0"][v116] = (function()
+																return TABLE_TableIndirection["v120%0"];
+															end)();
+															break;
+														end
+													end
+													break;
+												end
+												if ((3273 == 3273) and (0 ~= TABLE_TableIndirection["v117%0"])) then
+												else
+													TABLE_TableIndirection["v152%0"] = (function()
+														return 0 - 0;
+													end)();
+													while true do
+														if ((1 + 0) == TABLE_TableIndirection["v152%0"]) then
+															TABLE_TableIndirection["v117%0"] = (function()
+																return 1;
+															end)();
+															break;
+														end
+														if ((3824 > 409) and (0 == TABLE_TableIndirection["v152%0"])) then
+															TABLE_TableIndirection["v118%0"] = (function()
+																return 0;
+															end)();
+															TABLE_TableIndirection["v119%0"] = (function()
+																return nil;
+															end)();
+															TABLE_TableIndirection["v152%0"] = (function()
+																return 1025 - (706 + 318);
+															end)();
+														end
+													end
+												end
+											end
+										end
+										TABLE_TableIndirection["v95%0"] = (function()
+											return 1253 - (721 + 530);
+										end)();
+									end
+									if ((2087 == 2087) and (TABLE_TableIndirection["v95%0"] ~= (1271 - (945 + 326)))) then
+									else
+										TABLE_TableIndirection["FlatIdent_52551%0"] = 0;
 										while true do
-											if ((1 + 0) == v116) then
-												v92 = (function()
-													return #" ";
+											if (TABLE_TableIndirection["FlatIdent_52551%0"] == 0) then
+												TABLE_TableIndirection["v57%0"] = (function()
+													return {TABLE_TableIndirection["v54%0"],TABLE_TableIndirection["v55%0"],nil,TABLE_TableIndirection["v56%0"]};
+												end)();
+												TABLE_TableIndirection["v58%0"] = (function()
+													return v23();
+												end)();
+												TABLE_TableIndirection["FlatIdent_52551%0"] = 1;
+											end
+											if (TABLE_TableIndirection["FlatIdent_52551%0"] == 1) then
+												TABLE_TableIndirection["v95%0"] = (function()
+													return 1;
 												end)();
 												break;
 											end
-											if ((0 + 0) ~= v116) then
-											else
-												v93 = (function()
-													return v95();
-												end)();
-												v94 = (function()
-													return nil;
-												end)();
-												v116 = (function()
-													return 837 - (660 + 176);
-												end)();
-											end
 										end
-										break;
 									end
 								end
-								break;
 							end
-							if (FlatIdent_7909D == 0) then
-								v115 = (function()
-									return 0;
-								end)();
-								v116 = (function()
-									return;
-								end)();
-								FlatIdent_7909D = 1;
-							end
-						end
-					end
-				end
-				return v92, v93, v94, v95, v96, v97, v98, v99;
-			end;
-		end)();
-		local v54 = (function()
-			return function(v100, v101, v102)
-				local FlatIdent_8D1A5 = 0;
-				local v103;
-				local v104;
-				while true do
-					if (0 == FlatIdent_8D1A5) then
-						v103 = (function()
-							return 1824 - (1195 + 629);
-						end)();
-						v104 = (function()
-							return;
-						end)();
-						FlatIdent_8D1A5 = 1;
-					end
-					if (1 == FlatIdent_8D1A5) then
-						while true do
-							if (v103 ~= (0 + 0)) then
+							if (TABLE_TableIndirection["v52%0"] ~= 2) then
 							else
-								v104 = (function()
-									return 0;
+								TABLE_TableIndirection["v57%0"][#"gha"] = (function()
+									return v21();
 								end)();
-								while true do
-									if (v104 ~= (0 - 0)) then
-									else
-										local FlatIdent_20FB0 = 0;
+								for v97 = #":", v23() do
+									TABLE_TableIndirection["v98%0"] = (function()
+										return v21();
+									end)();
+									if (v20(TABLE_TableIndirection["v98%0"], #"<", #":") == (0 - 0)) then
+										TABLE_TableIndirection["v109%0"] = (function()
+											return 0 + 0;
+										end)();
+										TABLE_TableIndirection["v110%0"] = (function()
+											return;
+										end)();
+										TABLE_TableIndirection["v111%0"] = (function()
+											return;
+										end)();
+										TABLE_TableIndirection["v112%0"] = (function()
+											return;
+										end)();
+										TABLE_TableIndirection["v113%0"] = (function()
+											return;
+										end)();
 										while true do
-											if (0 == FlatIdent_20FB0) then
-												v100[v101 - #"]"] = (function()
-													return v102();
-												end)();
-												return v100, v101, v102;
-											end
-										end
-									end
-								end
-								break;
-							end
-						end
-						break;
-					end
-				end
-			end;
-		end)();
-		local v55 = (function()
-			return {};
-		end)();
-		local v56 = (function()
-			return {};
-		end)();
-		local v57 = (function()
-			return {};
-		end)();
-		local v58 = (function()
-			return {v55,v56,nil,v57};
-		end)();
-		local v59 = (function()
-			return v23();
-		end)();
-		local v60 = (function()
-			return {};
-		end)();
-		for v68 = #"<", v59 do
-			_G['FlatIdent_1BCFB'], _G['Type'], _G['Cons'], v21, v24, v25, v60, v68 = (function()
-				return v53(FlatIdent_1BCFB, Type, Cons, v21, v24, v25, v60, v68);
-			end)();
-		end
-		v58[#"-19"] = (function()
-			return v21();
-		end)();
-		for v69 = #" ", v23() do
-			local FlatIdent_5B4A8 = 0;
-			local v70;
-			local v71;
-			while true do
-				if (FlatIdent_5B4A8 == 1) then
-					while true do
-						if (v70 ~= (0 + 0)) then
-						else
-							v71 = (function()
-								return v21();
-							end)();
-							if (v20(v71, #"!", #":") == (0 + 0)) then
-								local v119 = (function()
-									return 0 + 0;
-								end)();
-								local v120 = (function()
-									return;
-								end)();
-								local v121 = (function()
-									return;
-								end)();
-								local v122 = (function()
-									return;
-								end)();
-								while true do
-									if (v119 == (6 - 3)) then
-										if (v20(v121, #"nil", #"-19") == #"|") then
-											v122[#".com"] = (function()
-												return v60[v122[#".dev"]];
-											end)();
-										end
-										v55[v69] = (function()
-											return v122;
-										end)();
-										break;
-									end
-									if (v119 == (1 - 0)) then
-										v122 = (function()
-											return {v22(),v22(),nil,nil};
-										end)();
-										if (v120 == (0 - 0)) then
-											local FlatIdent_5B2CE = 0;
-											local v130;
-											local v131;
-											while true do
-												if (FlatIdent_5B2CE == 1) then
-													while true do
-														if (v130 == (0 - 0)) then
-															v131 = (function()
-																return 0 + 0;
-															end)();
-															while true do
-																if (v131 ~= (0 + 0)) then
-																else
-																	v122[#"19("] = (function()
-																		return v22();
-																	end)();
-																	v122[#"?id="] = (function()
-																		return v22();
-																	end)();
-																	break;
-																end
-															end
-															break;
-														end
-													end
-													break;
-												end
-												if (FlatIdent_5B2CE == 0) then
-													v130 = (function()
-														return 0 + 0;
-													end)();
-													v131 = (function()
-														return;
-													end)();
-													FlatIdent_5B2CE = 1;
-												end
-											end
-										elseif (v120 == #":") then
-											v122[#"-19"] = (function()
-												return v23();
-											end)();
-										elseif (v120 == (2 + 0)) then
-											v122[#"xnx"] = (function()
-												return v23() - (2 ^ 16);
-											end)();
-										elseif (v120 ~= #"asd") then
-										else
-											local FlatIdent_2388 = 0;
-											local v138;
-											local v139;
-											while true do
-												if (1 == FlatIdent_2388) then
-													while true do
-														if (v138 == (396 - (115 + 281))) then
-															v139 = (function()
-																return 0 - 0;
-															end)();
-															while true do
-																if (v139 ~= (0 - 0)) then
-																else
-																	v122[#"xxx"] = (function()
-																		return v23() - ((2 - 0) ^ 16);
-																	end)();
-																	v122[#"http"] = (function()
-																		return v22();
-																	end)();
-																	break;
-																end
-															end
-															break;
-														end
-													end
-													break;
-												end
-												if (FlatIdent_2388 == 0) then
-													v138 = (function()
-														return 0;
-													end)();
-													v139 = (function()
-														return;
-													end)();
-													FlatIdent_2388 = 1;
-												end
-											end
-										end
-										v119 = (function()
-											return 2 + 0;
-										end)();
-									end
-									if (v119 ~= 2) then
-									else
-										if (v20(v121, #"[", #"~") == #"]") then
-											v122[2] = (function()
-												return v60[v122[4 - 2]];
-											end)();
-										end
-										if (v20(v121, 1 + 1, 7 - 5) ~= #"~") then
-										else
-											v122[#"asd"] = (function()
-												return v60[v122[#"19("]];
-											end)();
-										end
-										v119 = (function()
-											return 870 - (550 + 317);
-										end)();
-									end
-									if (v119 ~= (341 - (218 + 123))) then
-									else
-										local FlatIdent_19F98 = 0;
-										local v128;
-										while true do
-											if (FlatIdent_19F98 == 0) then
-												v128 = (function()
-													return 1581 - (1535 + 46);
-												end)();
+											if (TABLE_TableIndirection["v109%0"] ~= (702 - (271 + 429))) then
+											else
 												while true do
-													if (v128 == (1 - 0)) then
-														v119 = (function()
-															return 1 + 0;
+													if ((TABLE_TableIndirection["v110%0"] ~= #"19(") or (3404 > 4503)) then
+													else
+														if (v20(TABLE_TableIndirection["v112%0"], #"91(", #"19(") ~= #"{") then
+														else
+															TABLE_TableIndirection["v113%0"][#"?id="] = (function()
+																return TABLE_TableIndirection["v59%0"][TABLE_TableIndirection["v113%0"][#"http"]];
+															end)();
+														end
+														TABLE_TableIndirection["v54%0"][v97] = (function()
+															return TABLE_TableIndirection["v113%0"];
 														end)();
 														break;
 													end
-													if (v128 ~= (0 - 0)) then
-													else
-														local FlatIdent_61800 = 0;
+													if ((#"}" == TABLE_TableIndirection["v110%0"]) or (3506 <= 1309)) then
+														TABLE_TableIndirection["FlatIdent_61EE%0"] = 0;
+														TABLE_TableIndirection["v159%0"] = nil;
+														TABLE_TableIndirection["v160%0"] = nil;
 														while true do
-															if (FlatIdent_61800 == 0) then
-																v120 = (function()
-																	return v20(v71, 1 + 1, #"xnx");
+															if (0 == TABLE_TableIndirection["FlatIdent_61EE%0"]) then
+																TABLE_TableIndirection["v159%0"] = (function()
+																	return 0 + 0;
 																end)();
-																v121 = (function()
-																	return v20(v71, #"http", 16 - 10);
+																TABLE_TableIndirection["v160%0"] = (function()
+																	return;
 																end)();
-																FlatIdent_61800 = 1;
+																TABLE_TableIndirection["FlatIdent_61EE%0"] = 1;
 															end
-															if (FlatIdent_61800 == 1) then
-																v128 = (function()
-																	return 286 - (134 + 151);
-																end)();
-																break;
-															end
-														end
-													end
-												end
-												break;
-											end
-										end
-									end
-								end
-							end
-							break;
-						end
-					end
-					break;
-				end
-				if (FlatIdent_5B4A8 == 0) then
-					v70 = (function()
-						return 675 - (534 + 141);
-					end)();
-					v71 = (function()
-						return;
-					end)();
-					FlatIdent_5B4A8 = 1;
-				end
-			end
-		end
-		for v72 = #">", v23() do
-			v56, v72, v28 = (function()
-				return v54(v56, v72, v28);
-			end)();
-		end
-		return v58;
-	end
-	local function v29(v62, v63, v64)
-		local v65 = v62[1];
-		local v66 = v62[2];
-		local v67 = v62[3];
-		return function(...)
-			local v73 = v65;
-			local v74 = v66;
-			local v75 = v67;
-			local v76 = v27;
-			local v77 = 1468 - (899 + 568);
-			local v78 = -(1 + 0);
-			local v79 = {};
-			local v80 = {...};
-			local v81 = v12("#", ...) - (604 - ((698 - 430) + 335));
-			local v82 = {};
-			local v83 = {};
-			for v105 = 0 - 0, v81 do
-				if (v105 >= v75) then
-					v79[v105 - v75] = v80[v105 + (291 - (60 + 230))];
-				else
-					v83[v105] = v80[v105 + 1];
-				end
-			end
-			local v84 = (v81 - v75) + (573 - ((1482 - 1056) + 146));
-			local v85;
-			local v86;
-			while true do
-				local v106 = 0 + 0;
-				while true do
-					if (v106 == (1457 - (282 + 1174))) then
-						if (v86 <= (844 - (569 + 242))) then
-							if (v86 <= (46 - 30)) then
-								if (v86 <= 7) then
-									if ((3976 >= 439) and (v86 <= (1 + 2))) then
-										if (v86 <= ((477 + 548) - (706 + 318))) then
-											if (v86 > (1251 - (721 + 100 + 430))) then
-												for v234 = v85[(1107 + 166) - ((3187 - 2242) + 326)], v85[7 - 4] do
-													v83[v234] = nil;
-												end
-											else
-												v83[v85[2 + 0]] = v83[v85[703 - (271 + 429)]] + v83[v85[4]];
-											end
-										elseif (v86 == (2 + 0)) then
-											local v141 = 0;
-											local v142;
-											local v143;
-											while true do
-												if ((3752 == 3752) and (v141 == 1)) then
-													v83[v142 + (1501 - (1408 + 92))] = v143;
-													v83[v142] = v143[v85[1090 - (461 + 625)]];
-													break;
-												end
-												if ((1288 - (993 + 295)) == v141) then
-													v142 = v85[2];
-													v143 = v83[v85[1 + 2]];
-													v141 = 1172 - (418 + 753);
-												end
-											end
-										else
-											v83[v85[(1995 - (109 + 1885)) + 1]] = v83[v85[1 + 2]][v85[2 + 2]];
-										end
-									elseif ((4046 > 2695) and (v86 <= 5)) then
-										if ((v86 > ((1471 - (1269 + 200)) + 2)) or (3545 == 3197)) then
-											if (v83[v85[531 - (406 + 123)]] <= v85[1773 - ((3351 - 1602) + 20)]) then
-												v77 = v77 + 1 + 0;
-											else
-												v77 = v85[3];
-											end
-										else
-											local FlatIdent_6225E = 0;
-											local v146;
-											local v147;
-											while true do
-												if (FlatIdent_6225E == 1) then
-													while true do
-														if (v146 == (826 - (802 + 24))) then
-															v147 = v85[1324 - (1249 + 73)];
-															v83[v147] = v83[v147]();
-															break;
-														end
-													end
-													break;
-												end
-												if (FlatIdent_6225E == 0) then
-													v146 = 815 - (98 + 717);
-													v147 = nil;
-													FlatIdent_6225E = 1;
-												end
-											end
-										end
-									elseif (v86 > (3 + 3)) then
-										if ((2394 > 373) and (v83[v85[1147 - (466 + 679)]] < v83[v85[4]])) then
-											v77 = v77 + (2 - 1);
-										else
-											v77 = v85[8 - 5];
-										end
-									elseif v83[v85[1902 - ((182 - 76) + 1794)]] then
-										v77 = v77 + 1 + (0 - 0);
-									else
-										v77 = v85[1 + 2];
-									end
-								elseif ((4155 <= 4232) and (v86 <= (32 - 21))) then
-									if (v86 <= 9) then
-										if (v86 == (21 - (2 + 11))) then
-											v83[v85[2]] = v83[v85[117 - (4 + 110)]] - v83[v85[588 - (57 + 527)]];
-										else
-											local v149 = v85[1429 - (41 + 1065 + 321)];
-											local v150 = v85[1 + 3];
-											local v151 = v149 + (105 - (17 + 86));
-											local v152 = {v83[v149](v83[v149 + 1], v83[v151])};
-											for v236 = 1 - 0, v150 do
-												v83[v151 + v236] = v152[v236];
-											end
-											local v153 = v152[1];
-											if v153 then
-												local FlatIdent_21449 = 0;
-												local v254;
-												while true do
-													if (FlatIdent_21449 == 0) then
-														v254 = 0 - 0;
-														while true do
-															if ((v254 == (166 - (122 + 44))) or (3581 == 3473)) then
-																v83[v151] = v153;
-																v77 = v85[5 - 2];
-																break;
-															end
-														end
-														break;
-													end
-												end
-											else
-												v77 = v77 + (3 - 2);
-											end
-										end
-									elseif ((4995 > 3348) and (v86 == (9 + 1 + 0))) then
-										v77 = v85[1 + 2];
-									else
-										local FlatIdent_67691 = 0;
-										local v155;
-										while true do
-											if (FlatIdent_67691 == 0) then
-												v155 = v85[3 - 1];
-												v83[v155] = v83[v155](v13(v83, v155 + (66 - (30 + 35)), v85[3 + 0]));
-												break;
-											end
-										end
-									end
-								elseif (v86 <= (1270 - (1043 + 214))) then
-									if (v86 > (45 - 33)) then
-										v63[v85[1215 - (323 + 889)]] = v83[v85[5 - (8 - 5)]];
-									else
-										local v159 = 580 - (361 + 219);
-										local v160;
-										local v161;
-										local v162;
-										while true do
-											if (v159 == ((1067 - 747) - (53 + 267))) then
-												local FlatIdent_20FE3 = 0;
-												while true do
-													if (FlatIdent_20FE3 == 1) then
-														v159 = 414 - (15 + 398);
-														break;
-													end
-													if (FlatIdent_20FE3 == 0) then
-														v160 = v74[v85[1 + 2]];
-														v161 = nil;
-														FlatIdent_20FE3 = 1;
-													end
-												end
-											end
-											if (v159 == 2) then
-												for v322 = (352 + 631) - (8 + 10 + 964), v85[14 - 10] do
-													local v323 = 0 + 0;
-													local v324;
-													while true do
-														if ((v323 == 0) or (754 > 3724)) then
-															local FlatIdent_77172 = 0;
-															while true do
-																if (FlatIdent_77172 == 1) then
-																	v323 = 851 - (20 + 830);
-																	break;
-																end
-																if (FlatIdent_77172 == 0) then
-																	v77 = v77 + 1 + 0;
-																	v324 = v73[v77];
-																	FlatIdent_77172 = 1;
-																end
-															end
-														end
-														if (v323 == 1) then
-															if ((217 >= 57) and (v324[1 + 0] == (185 - (116 + 10)))) then
-																v162[v322 - (1 + 0)] = {v83,v324[1 + 2]};
-															else
-																v162[v322 - (1 + 0 + 0)] = {v63,v324[3]};
-															end
-															v82[#v82 + (2 - 1)] = v162;
-															break;
-														end
-													end
-												end
-												v83[v85[1553 - (1126 + 425)]] = v29(v160, v161, v64);
-												break;
-											end
-											if ((v159 == (406 - (118 + 287))) or (2070 >= 4037)) then
-												v162 = {};
-												v161 = v10({}, {__index=function(v325, v326)
-													local FlatIdent_634AF = 0;
-													local v327;
-													local v328;
-													while true do
-														if (0 == FlatIdent_634AF) then
-															v327 = 0 - 0;
-															v328 = nil;
-															FlatIdent_634AF = 1;
-														end
-														if (FlatIdent_634AF == 1) then
-															while true do
-																if (v327 == (1121 - (118 + 1003))) then
-																	v328 = v162[v326];
-																	return v328[2 - 1][v328[379 - (142 + 235)]];
-																end
-															end
-															break;
-														end
-													end
-												end,__newindex=function(v329, v330, v331)
-													local FlatIdent_21297 = 0;
-													local v332;
-													local v333;
-													while true do
-														if (FlatIdent_21297 == 0) then
-															v332 = 0 - 0;
-															v333 = nil;
-															FlatIdent_21297 = 1;
-														end
-														if (FlatIdent_21297 == 1) then
-															while true do
-																if (v332 == (0 + 0)) then
-																	v333 = v162[v330];
-																	v333[978 - (553 + 424)][v333[3 - 1]] = v331;
-																	break;
-																end
-															end
-															break;
-														end
-													end
-												end});
-												v159 = 2 + 0;
-											end
-										end
-									end
-								elseif (v86 <= 14) then
-									if (v85[(9 - 7) + 0] <= v83[v85[3 + 1]]) then
-										v77 = v77 + 1 + (1619 - (1427 + 192));
-									else
-										v77 = v85[2 + 1];
-									end
-								elseif ((2705 == 2705) and (v86 > (32 - 17))) then
-									local v256 = 0;
-									local v257;
-									local v258;
-									while true do
-										if ((0 - (0 + 0)) == v256) then
-											local FlatIdent_28855 = 0;
-											while true do
-												if (FlatIdent_28855 == 1) then
-													v256 = 1;
-													break;
-												end
-												if (FlatIdent_28855 == 0) then
-													v257 = v85[4 - 2];
-													v258 = v83[v85[(2 - 1) + 2]];
-													FlatIdent_28855 = 1;
-												end
-											end
-										end
-										if ((61 == 61) and (v256 == (4 - 3))) then
-											v83[v257 + (754 - (239 + 514))] = v258;
-											v83[v257] = v258[v85[4]];
-											break;
-										end
-									end
-								else
-									local FlatIdent_276C2 = 0;
-									local v259;
-									while true do
-										if (FlatIdent_276C2 == 0) then
-											v259 = v85[2];
-											do
-												return v13(v83, v259, v259 + v85[2 + 1]);
-											end
-											break;
-										end
-									end
-								end
-							elseif ((v86 <= (1353 - (797 + 532))) or (699 >= 1296)) then
-								if (v86 <= (15 + 5)) then
-									if (v86 <= (7 + 11)) then
-										if ((v86 > (39 - 22)) or (1783 >= 3616)) then
-											if (v83[v85[(1083 + 121) - (373 + 829)]] < v83[v85[735 - (476 + 255)]]) then
-												v77 = v77 + (1131 - (369 + 345 + 416));
-											else
-												v77 = v85[2 + 1];
-											end
-										else
-											v83[v85[2 - (326 - (192 + 134))]] = v83[v85[3]] + v83[v85[7 - 3]];
-										end
-									elseif (v86 > (257 - (64 + 174))) then
-										v83[v85[1 + 1]][v85[3 - 0]] = v83[v85[340 - (144 + 192)]];
-									else
-										local v166 = v85[218 - (42 + 174)];
-										local v167 = {};
-										for v239 = 1, #v82 do
-											local FlatIdent_6D68E = 0;
-											local v240;
-											while true do
-												if (FlatIdent_6D68E == 0) then
-													v240 = v82[v239];
-													for v261 = 0 + 0, #v240 do
-														local v262 = 0;
-														local v263;
-														local v264;
-														local v265;
-														while true do
-															if (1 == v262) then
-																v265 = v263[2 + 0];
-																if (((v264 == v83) and (v265 >= v166)) or (3913 > 4527)) then
-																	local FlatIdent_5724B = 0;
-																	while true do
-																		if (0 == FlatIdent_5724B) then
-																			v167[v265] = v264[v265];
-																			v263[1] = v167;
-																			break;
+															if (1 == TABLE_TableIndirection["FlatIdent_61EE%0"]) then
+																while true do
+																	if ((2955 == 2955) and (TABLE_TableIndirection["v159%0"] == (1500 - (1408 + 92)))) then
+																		TABLE_TableIndirection["v160%0"] = (function()
+																			return 1086 - (461 + 625);
+																		end)();
+																		while true do
+																			if (TABLE_TableIndirection["v160%0"] ~= (1288 - (993 + 295))) then
+																			else
+																				TABLE_TableIndirection["v113%0"] = (function()
+																					return {v22(),v22(),nil,nil};
+																				end)();
+																				if ((TABLE_TableIndirection["v111%0"] == (0 + 0)) or (2903 == 1495)) then
+																					TABLE_TableIndirection["v171%0"] = (function()
+																						return 1171 - (418 + 753);
+																					end)();
+																					TABLE_TableIndirection["v172%0"] = (function()
+																						return;
+																					end)();
+																					while true do
+																						if ((4546 >= 2275) and (TABLE_TableIndirection["v171%0"] == 0)) then
+																							TABLE_TableIndirection["v172%0"] = (function()
+																								return 0;
+																							end)();
+																							while true do
+																								if (0 ~= TABLE_TableIndirection["v172%0"]) then
+																								else
+																									TABLE_TableIndirection["v113%0"][#"nil"] = (function()
+																										return v22();
+																									end)();
+																									TABLE_TableIndirection["v113%0"][#"asd1"] = (function()
+																										return v22();
+																									end)();
+																									break;
+																								end
+																							end
+																							break;
+																						end
+																					end
+																				elseif (TABLE_TableIndirection["v111%0"] == #"~") then
+																					TABLE_TableIndirection["v113%0"][#"19("] = (function()
+																						return v23();
+																					end)();
+																				elseif ((819 >= 22) and (TABLE_TableIndirection["v111%0"] == 2)) then
+																					TABLE_TableIndirection["v113%0"][#"asd"] = (function()
+																						return v23() - ((1 + 1) ^ (2 + 14));
+																					end)();
+																				elseif ((3162 == 3162) and (TABLE_TableIndirection["v111%0"] ~= #"asd")) then
+																				else
+																					TABLE_TableIndirection["v177%0"] = (function()
+																						return 0;
+																					end)();
+																					TABLE_TableIndirection["v178%0"] = (function()
+																						return;
+																					end)();
+																					while true do
+																						if (0 == TABLE_TableIndirection["v177%0"]) then
+																							TABLE_TableIndirection["v178%0"] = (function()
+																								return 0;
+																							end)();
+																							while true do
+																								if (((0 + 0) == TABLE_TableIndirection["v178%0"]) or (2369 > 4429)) then
+																									TABLE_TableIndirection["v113%0"][#"19("] = (function()
+																										return v23() - ((1 + 1) ^ 16);
+																									end)();
+																									TABLE_TableIndirection["v113%0"][#"http"] = (function()
+																										return v22();
+																									end)();
+																									break;
+																								end
+																							end
+																							break;
+																						end
+																					end
+																				end
+																				TABLE_TableIndirection["v160%0"] = (function()
+																					return 530 - (406 + 123);
+																				end)();
+																			end
+																			if ((4095 >= 3183) and ((1770 - (1749 + 20)) == TABLE_TableIndirection["v160%0"])) then
+																				TABLE_TableIndirection["v110%0"] = (function()
+																					return 1 + 1;
+																				end)();
+																				break;
+																			end
 																		end
+																		break;
 																	end
 																end
 																break;
 															end
-															if (v262 == (0 + 0)) then
-																v263 = v240[v261];
-																v264 = v263[1505 - (363 + 1141)];
-																v262 = 1581 - (1183 + 397);
-															end
 														end
 													end
-													break;
-												end
-											end
-										end
-									end
-								elseif (v86 <= (66 - 44)) then
-									if ((4376 > 817) and (v86 == 21)) then
-										if (v85[2] == v83[v85[3 + 1]]) then
-											v77 = v77 + 1 + 0;
-										else
-											v77 = v85[1978 - (1913 + (1338 - (316 + 960)))];
-										end
-									else
-										v83[v85[2 + 0]] = v64[v85[3]];
-									end
-								elseif ((4861 > 824) and (v86 == (13 + 10))) then
-									v83[v85[5 - 3]][v85[1936 - (565 + 1056 + 312)]] = v85[15 - 11];
-								else
-									v83[v85[1663 - (1477 + 184)]] = v83[v85[3 - 0]];
-								end
-							elseif ((v86 <= (27 + 1)) or (1383 >= 2131)) then
-								if (v86 <= (882 - (564 + 292))) then
-									if (v86 == (42 - 17)) then
-										local FlatIdent_8E5B4 = 0;
-										local v174;
-										while true do
-											if (FlatIdent_8E5B4 == 0) then
-												v174 = v85[5 - 3];
-												v83[v174] = v83[v174](v83[v174 + 1]);
-												break;
-											end
-										end
-									else
-										local FlatIdent_7873D = 0;
-										local v176;
-										local v177;
-										while true do
-											if (1 == FlatIdent_7873D) then
-												while true do
-													if (v176 == (0 + 0)) then
-														v177 = v85[478 - (41 + 435)];
-														v83[v177](v13(v83, v177 + (1002 - ((3585 - 2647) + 63)), v85[3 + 0]));
-														break;
-													end
-												end
-												break;
-											end
-											if (FlatIdent_7873D == 0) then
-												v176 = 304 - (244 + 56 + 4);
-												v177 = nil;
-												FlatIdent_7873D = 1;
-											end
-										end
-									end
-								elseif (v86 == (1152 - (936 + 189))) then
-									if (v83[v85[2]] == v85[2 + 2]) then
-										v77 = v77 + (1614 - (1565 + 48));
-									else
-										v77 = v85[2 + 1];
-									end
-								else
-									local FlatIdent_92F66 = 0;
-									local v178;
-									local v179;
-									local v180;
-									local v181;
-									local v182;
-									while true do
-										if (FlatIdent_92F66 == 0) then
-											v178 = v85[1140 - (782 + 356)];
-											v179 = v85[271 - (176 + 91)];
-											FlatIdent_92F66 = 1;
-										end
-										if (FlatIdent_92F66 == 3) then
-											if v182 then
-												local v268 = 0 + 0;
-												while true do
-													if (v268 == (0 - (1806 - (1202 + 604)))) then
-														v83[v180] = v182;
-														v77 = v85[3];
-														break;
-													end
-												end
-											else
-												v77 = v77 + (3 - 2);
-											end
-											break;
-										end
-										if (FlatIdent_92F66 == 1) then
-											v180 = v178 + (4 - 2);
-											v181 = {v83[v178](v83[v178 + (1093 - (975 + 117))], v83[v180])};
-											FlatIdent_92F66 = 2;
-										end
-										if (FlatIdent_92F66 == 2) then
-											for v241 = 1876 - (157 + 1718), v179 do
-												v83[v180 + v241] = v181[v241];
-											end
-											v182 = v181[1];
-											FlatIdent_92F66 = 3;
-										end
-									end
-								end
-							elseif ((v86 <= (1048 - (697 + 321))) or (1876 >= 2541)) then
-								if ((1782 <= 3772) and (v86 > ((364 - 286) - 49))) then
-									v83[v85[3 - 1]][v85[6 - 3]] = v85[2 + 2];
-								elseif v83[v85[3 - (1 - 0)]] then
-									v77 = v77 + (2 - (2 - 1));
-								else
-									v77 = v85[3];
-								end
-							elseif (v86 <= (1258 - (322 + 905))) then
-								v83[v85[2]] = v85[614 - (602 + 9)] ~= (1189 - (449 + 740));
-							elseif (v86 == 32) then
-								local FlatIdent_6E549 = 0;
-								local v270;
-								local v271;
-								local v272;
-								local v273;
-								while true do
-									if (FlatIdent_6E549 == 2) then
-										for v301 = v270, v78 do
-											local FlatIdent_829F9 = 0;
-											while true do
-												if (FlatIdent_829F9 == 0) then
-													v273 = v273 + 1;
-													v83[v301] = v271[v273];
-													break;
-												end
-											end
-										end
-										break;
-									end
-									if (FlatIdent_6E549 == 1) then
-										v78 = (v272 + v270) - (3 - 2);
-										v273 = 0 + 0;
-										FlatIdent_6E549 = 2;
-									end
-									if (FlatIdent_6E549 == 0) then
-										v270 = v85[874 - (826 + (371 - (45 + 280)))];
-										v271, v272 = v76(v83[v270](v83[v270 + (948 - (245 + 702))]));
-										FlatIdent_6E549 = 1;
-									end
-								end
-							elseif (v83[v85[(1834 + 66) - (260 + 1638)]] <= v85[444 - (382 + 58)]) then
-								v77 = v77 + (3 - 2);
-							else
-								v77 = v85[3 + 0];
-							end
-						elseif (v86 <= (103 - 53)) then
-							if ((v86 <= (36 + 5)) or (4700 < 813)) then
-								if ((3199 < 4050) and (v86 <= (109 - (27 + 45)))) then
-									if (v86 <= ((687 + 553) - (902 + 303))) then
-										if (v86 > (74 - 40)) then
-											v83[v85[(1 + 3) - (3 - 1)]] = v63[v85[1 + 2]];
-										else
-											v83[v85[1692 - ((3032 - (340 + 1571)) + 569)]] = v83[v85[217 - (22 + 192)]] - v83[v85[4]];
-										end
-									elseif (v86 > (719 - (483 + 200))) then
-										local FlatIdent_89562 = 0;
-										local v189;
-										while true do
-											if (FlatIdent_89562 == 0) then
-												v189 = v85[1465 - (554 + 850 + 59)];
-												v83[v189] = v83[v189](v83[v189 + 1]);
-												break;
-											end
-										end
-									elseif (v85[5 - 3] <= v83[v85[4 - 0]]) then
-										v77 = v77 + (766 - (468 + 297));
-									else
-										v77 = v85[565 - (334 + 228)];
-									end
-								elseif (v86 <= 39) then
-									if ((v86 == 38) or (4951 < 4430)) then
-										local FlatIdent_10DED = 0;
-										local v191;
-										local v192;
-										local v193;
-										while true do
-											if (FlatIdent_10DED == 1) then
-												v193 = 0 - (1772 - (1733 + 39));
-												for v244 = v191, v85[4] do
-													local FlatIdent_7147 = 0;
-													while true do
-														if (FlatIdent_7147 == 0) then
-															v193 = v193 + 1;
-															v83[v244] = v192[v193];
-															break;
-														end
-													end
-												end
-												break;
-											end
-											if (FlatIdent_10DED == 0) then
-												v191 = v85[2];
-												v192 = {v83[v191](v13(v83, v191 + (2 - 1), v78))};
-												FlatIdent_10DED = 1;
-											end
-										end
-									else
-										v83[v85[2]] = v85[1 + 2];
-									end
-								elseif (v86 > (276 - (141 + 95))) then
-									do
-										return v83[v85[2 + (0 - 0)]];
-									end
-								elseif (v85[2] == v83[v85[9 - 5]]) then
-									v77 = v77 + (2 - 1);
-								else
-									v77 = v85[1 + 2];
-								end
-							elseif (v86 <= (123 - 78)) then
-								if ((96 == 96) and (v86 <= (31 + 12))) then
-									if ((v86 > (22 + 20)) or (2739 > 4008)) then
-										local v196 = v85[2 - 0];
-										v83[v196](v13(v83, v196 + 1 + 0, v85[166 - (92 + 71)]));
-									else
-										local FlatIdent_360E8 = 0;
-										local v197;
-										local v198;
-										local v199;
-										local v200;
-										while true do
-											if (FlatIdent_360E8 == 0) then
-												v197 = (1034 - (125 + 909)) + 0;
-												v198 = nil;
-												FlatIdent_360E8 = 1;
-											end
-											if (FlatIdent_360E8 == 2) then
-												while true do
-													if ((v197 == (1948 - (1096 + 852))) or (23 == 1134)) then
-														v198 = v85[2 - 0];
-														v199 = {v83[v198](v13(v83, v198 + (766 - (574 + 191)), v78))};
-														v197 = 1 + 0;
-													end
-													if ((v197 == (2 - 1)) or (2693 >= 4111)) then
-														v200 = 0;
-														for v335 = v198, v85[3 + 1] do
-															v200 = v200 + (850 - (254 + 595));
-															v83[v335] = v199[v200];
-														end
-														break;
-													end
-												end
-												break;
-											end
-											if (FlatIdent_360E8 == 1) then
-												v199 = nil;
-												v200 = nil;
-												FlatIdent_360E8 = 2;
-											end
-										end
-									end
-								elseif (v86 > (43 + 1)) then
-									for v247 = v85[(640 - (409 + 103)) - (55 + 71)], v85[3 - 0] do
-										v83[v247] = nil;
-									end
-								else
-									v83[v85[1792 - (573 + 1217)]] = v64[v85[8 - 5]];
-								end
-							elseif (v86 <= (4 + 43)) then
-								if ((v86 > 46) or (4316 <= 2146)) then
-									local FlatIdent_6DFD9 = 0;
-									local v203;
-									local v204;
-									local v205;
-									while true do
-										if (FlatIdent_6DFD9 == 1) then
-											v205 = nil;
-											while true do
-												if (((939 - (714 + 225)) == v203) or (3546 <= 2809)) then
-													v204 = v85[5 - 3];
-													v205 = {};
-													v203 = 1 - 0;
-												end
-												if (v203 == (1 + 0)) then
-													for v338 = 1 - 0, #v82 do
-														local FlatIdent_C595 = 0;
-														local v339;
-														local v340;
+													if ((TABLE_TableIndirection["v110%0"] == (1322 - (1249 + 73))) or (3711 < 1008)) then
+														TABLE_TableIndirection["FlatIdent_7F121%0"] = 0;
+														TABLE_TableIndirection["v161%0"] = nil;
+														TABLE_TableIndirection["v162%0"] = nil;
 														while true do
-															if (FlatIdent_C595 == 1) then
+															if (TABLE_TableIndirection["FlatIdent_7F121%0"] == 0) then
+																TABLE_TableIndirection["v161%0"] = (function()
+																	return 0 + 0;
+																end)();
+																TABLE_TableIndirection["v162%0"] = (function()
+																	return;
+																end)();
+																TABLE_TableIndirection["FlatIdent_7F121%0"] = 1;
+															end
+															if (TABLE_TableIndirection["FlatIdent_7F121%0"] == 1) then
 																while true do
-																	if (0 == v339) then
-																		v340 = v82[v338];
-																		for v373 = 0, #v340 do
-																			local FlatIdent_1E5DB = 0;
-																			local v374;
-																			local v375;
-																			local v376;
-																			while true do
-																				if (FlatIdent_1E5DB == 0) then
-																					v374 = v340[v373];
-																					v375 = v374[1];
-																					FlatIdent_1E5DB = 1;
-																				end
-																				if (FlatIdent_1E5DB == 1) then
-																					v376 = v374[808 - (118 + 688)];
-																					if ((v375 == v83) and (v376 >= v204)) then
-																						local FlatIdent_40096 = 0;
-																						local v379;
-																						while true do
-																							if (FlatIdent_40096 == 0) then
-																								v379 = 48 - (25 + 23);
-																								while true do
-																									if (((95 - (51 + 44)) + 0) == v379) then
-																										v205[v376] = v375[v376];
-																										v374[1887 - (927 + 959)] = v205;
-																										break;
-																									end
-																								end
-																								break;
-																							end
-																						end
+																	if ((TABLE_TableIndirection["v161%0"] ~= (1145 - (466 + 679))) or (1049 <= 906)) then
+																	else
+																		TABLE_TableIndirection["v162%0"] = (function()
+																			return 0 - 0;
+																		end)();
+																		while true do
+																			if (TABLE_TableIndirection["v162%0"] ~= 1) then
+																			else
+																				TABLE_TableIndirection["v110%0"] = (function()
+																					return #":";
+																				end)();
+																				break;
+																			end
+																			if ((4513 > 2726) and ((0 - 0) == TABLE_TableIndirection["v162%0"])) then
+																				TABLE_TableIndirection["FlatIdent_3CF36%0"] = 0;
+																				while true do
+																					if (0 == TABLE_TableIndirection["FlatIdent_3CF36%0"]) then
+																						TABLE_TableIndirection["v111%0"] = (function()
+																							return v20(TABLE_TableIndirection["v98%0"], 2, #"-19");
+																						end)();
+																						TABLE_TableIndirection["v112%0"] = (function()
+																							return v20(TABLE_TableIndirection["v98%0"], #"0313", 1906 - (106 + 1794));
+																						end)();
+																						TABLE_TableIndirection["FlatIdent_3CF36%0"] = 1;
 																					end
-																					break;
+																					if (TABLE_TableIndirection["FlatIdent_3CF36%0"] == 1) then
+																						TABLE_TableIndirection["v162%0"] = (function()
+																							return 1 + 0;
+																						end)();
+																						break;
+																					end
 																				end
 																			end
 																		end
@@ -1331,309 +706,419 @@ local function v15(v16, v17, ...)
 																end
 																break;
 															end
-															if (FlatIdent_C595 == 0) then
-																v339 = 0;
-																v340 = nil;
-																FlatIdent_C595 = 1;
+														end
+													end
+													if (TABLE_TableIndirection["v110%0"] ~= (1 + 1)) then
+													else
+														TABLE_TableIndirection["v163%0"] = (function()
+															return 0 - 0;
+														end)();
+														while true do
+															if (((2 - 1) == TABLE_TableIndirection["v163%0"]) or (1481 >= 2658)) then
+																TABLE_TableIndirection["v110%0"] = (function()
+																	return #"-19";
+																end)();
+																break;
+															end
+															if (TABLE_TableIndirection["v163%0"] ~= (114 - (4 + 110))) then
+															else
+																TABLE_TableIndirection["FlatIdent_45D37%0"] = 0;
+																while true do
+																	if (TABLE_TableIndirection["FlatIdent_45D37%0"] == 1) then
+																		TABLE_TableIndirection["v163%0"] = (function()
+																			return 1;
+																		end)();
+																		break;
+																	end
+																	if (TABLE_TableIndirection["FlatIdent_45D37%0"] == 0) then
+																		if ((v20(TABLE_TableIndirection["v112%0"], #" ", #">") == #"[") or (3220 == 1364)) then
+																			TABLE_TableIndirection["v113%0"][586 - (57 + 527)] = (function()
+																				return TABLE_TableIndirection["v59%0"][TABLE_TableIndirection["v113%0"][2]];
+																			end)();
+																		end
+																		if ((v20(TABLE_TableIndirection["v112%0"], 1429 - (41 + 1386), 105 - (17 + 86)) == #"[") or (1054 > 3392)) then
+																			TABLE_TableIndirection["v113%0"][#"19("] = (function()
+																				return TABLE_TableIndirection["v59%0"][TABLE_TableIndirection["v113%0"][#"nil"]];
+																			end)();
+																		end
+																		TABLE_TableIndirection["FlatIdent_45D37%0"] = 1;
+																	end
+																end
 															end
 														end
 													end
-													break;
+												end
+												break;
+											end
+											if (TABLE_TableIndirection["v109%0"] ~= 1) then
+											else
+												TABLE_TableIndirection["v148%0"] = (function()
+													return 0;
+												end)();
+												while true do
+													if ((1 ~= TABLE_TableIndirection["v148%0"]) or (676 >= 1642)) then
+													else
+														TABLE_TableIndirection["v109%0"] = (function()
+															return 2 + 0;
+														end)();
+														break;
+													end
+													if ((4136 > 2397) and (TABLE_TableIndirection["v148%0"] == (0 - 0))) then
+														TABLE_TableIndirection["FlatIdent_494F6%0"] = 0;
+														while true do
+															if (TABLE_TableIndirection["FlatIdent_494F6%0"] == 0) then
+																TABLE_TableIndirection["v112%0"] = (function()
+																	return nil;
+																end)();
+																TABLE_TableIndirection["v113%0"] = (function()
+																	return nil;
+																end)();
+																TABLE_TableIndirection["FlatIdent_494F6%0"] = 1;
+															end
+															if (TABLE_TableIndirection["FlatIdent_494F6%0"] == 1) then
+																TABLE_TableIndirection["v148%0"] = (function()
+																	return 1;
+																end)();
+																break;
+															end
+														end
+													end
 												end
 											end
-											break;
-										end
-										if (FlatIdent_6DFD9 == 0) then
-											v203 = (236 - (46 + 190)) - 0;
-											v204 = nil;
-											FlatIdent_6DFD9 = 1;
-										end
-									end
-								else
-									v83[v85[6 - 4]][v85[735 - (16 + 716)]] = v83[v85[7 - 3]];
-								end
-							elseif (v86 <= 48) then
-								local FlatIdent_5077 = 0;
-								local v208;
-								while true do
-									if (FlatIdent_5077 == 0) then
-										v208 = v85[99 - (11 + 86)];
-										v83[v208](v83[v208 + (2 - (1 + 0))]);
-										break;
-									end
-								end
-							elseif (v86 > (334 - (175 + 110))) then
-								do
-									return;
-								end
-							else
-								v83[v85[4 - 2]] = v83[v85[14 - 11]][v85[4]];
-							end
-						elseif (v86 <= 59) then
-							if (v86 <= (1850 - (503 + 1293))) then
-								if ((4904 > 2166) and (v86 <= (145 - 93))) then
-									if (v86 > (37 + 14)) then
-										do
-											return v83[v85[1063 - (810 + 251)]];
-										end
-									else
-										v83[v85[2 + 0]] = v85[1 + 2];
-									end
-								elseif (v86 == (1370 - (1114 + 203))) then
-									do
-										return;
-									end
-								else
-									v77 = v85[3 + 0];
-								end
-							elseif (v86 <= (589 - (43 + 490))) then
-								if ((109 >= 90) and (v86 == (788 - (711 + 22)))) then
-									if (v83[v85[7 - (731 - (228 + 498))]] == v85[863 - (240 + 619)]) then
-										v77 = v77 + 1 + 0 + 0;
-									else
-										v77 = v85[4 - (1 + 0)];
-									end
-								else
-									local FlatIdent_6EF7B = 0;
-									local v212;
-									local v213;
-									local v214;
-									local v215;
-									while true do
-										if (FlatIdent_6EF7B == 1) then
-											v78 = (v214 + v212) - (406 - (255 + 150));
-											v215 = 0 + 0;
-											FlatIdent_6EF7B = 2;
-										end
-										if (FlatIdent_6EF7B == 0) then
-											v212 = v85[1 + 1];
-											v213, v214 = v76(v83[v212](v83[v212 + (1745 - (1344 + 400))]));
-											FlatIdent_6EF7B = 1;
-										end
-										if (FlatIdent_6EF7B == 2) then
-											for v249 = v212, v78 do
-												local FlatIdent_84B7E = 0;
-												local v250;
+											if ((TABLE_TableIndirection["v109%0"] == (0 - 0)) or (4334 == 4245)) then
+												TABLE_TableIndirection["FlatIdent_5EE26%0"] = 0;
+												TABLE_TableIndirection["v149%0"] = nil;
 												while true do
-													if (FlatIdent_84B7E == 0) then
-														v250 = 0 + 0;
+													if (TABLE_TableIndirection["FlatIdent_5EE26%0"] == 0) then
+														TABLE_TableIndirection["v149%0"] = (function()
+															return 166 - (122 + 44);
+														end)();
 														while true do
-															if (v250 == ((663 - (174 + 489)) - 0)) then
-																v215 = v215 + (3 - 2);
-																v83[v249] = v213[v215];
+															if ((TABLE_TableIndirection["v149%0"] == (1 - 0)) or (4276 <= 3031)) then
+																TABLE_TableIndirection["v109%0"] = (function()
+																	return 3 - 2;
+																end)();
 																break;
+															end
+															if ((TABLE_TableIndirection["v149%0"] == 0) or (4782 <= 1199)) then
+																TABLE_TableIndirection["FlatIdent_25A9F%0"] = 0;
+																while true do
+																	if (TABLE_TableIndirection["FlatIdent_25A9F%0"] == 0) then
+																		TABLE_TableIndirection["v110%0"] = (function()
+																			return 0;
+																		end)();
+																		TABLE_TableIndirection["v111%0"] = (function()
+																			return nil;
+																		end)();
+																		TABLE_TableIndirection["FlatIdent_25A9F%0"] = 1;
+																	end
+																	if (TABLE_TableIndirection["FlatIdent_25A9F%0"] == 1) then
+																		TABLE_TableIndirection["v149%0"] = (function()
+																			return 1;
+																		end)();
+																		break;
+																	end
+																end
 															end
 														end
 														break;
 													end
 												end
 											end
-											break;
 										end
 									end
 								end
-							elseif ((4978 > 2905) and (v86 <= 57)) then
-								local FlatIdent_508D4 = 0;
-								local v216;
-								local v217;
-								while true do
-									if (1 == FlatIdent_508D4) then
+								for v99 = #">", v23() do
+									TABLE_TableIndirection["v55%0"], v99, v28 = (function()
+										return TABLE_TableIndirection["v53%0"](TABLE_TableIndirection["v55%0"], v99, v28);
+									end)();
+								end
+								return TABLE_TableIndirection["v57%0"];
+							end
+							TABLE_TableIndirection["v66%0"] = (function()
+								return 1;
+							end)();
+						end
+						if (TABLE_TableIndirection["v66%0"] ~= 1) then
+						else
+							if (TABLE_TableIndirection["v52%0"] == (0 + 0)) then
+								TABLE_TableIndirection["v53%0"] = (function()
+									return function(v100, v101, v102)
+										TABLE_TableIndirection["FlatIdent_691EB%0"] = 0;
+										TABLE_TableIndirection["v103%0"] = nil;
+										TABLE_TableIndirection["v104%0"] = nil;
 										while true do
-											if ((406 - (183 + 223)) == v216) then
-												v217 = v85[5 - 3];
-												v83[v217](v83[v217 + (1 - 0)]);
+											if (TABLE_TableIndirection["FlatIdent_691EB%0"] == 1) then
+												while true do
+													if (TABLE_TableIndirection["v103%0"] ~= (0 + 0)) then
+													else
+														TABLE_TableIndirection["v104%0"] = (function()
+															return 0 - 0;
+														end)();
+														while true do
+															if ((TABLE_TableIndirection["v104%0"] ~= 0) or (4864 < 1902)) then
+															else
+																TABLE_TableIndirection["FlatIdent_1013A%0"] = 0;
+																TABLE_TableIndirection["v154%0"] = nil;
+																while true do
+																	if (0 == TABLE_TableIndirection["FlatIdent_1013A%0"]) then
+																		TABLE_TableIndirection["v154%0"] = (function()
+																			return 0;
+																		end)();
+																		while true do
+																			if ((4839 >= 3700) and ((65 - (30 + 35)) == TABLE_TableIndirection["v154%0"])) then
+																				TABLE_TableIndirection["FlatIdent_77172%0"] = 0;
+																				while true do
+																					if (TABLE_TableIndirection["FlatIdent_77172%0"] == 0) then
+																						v100[v101 - #"]"] = (function()
+																							return v102();
+																						end)();
+																						return v100, v101, v102;
+																					end
+																				end
+																			end
+																		end
+																		break;
+																	end
+																end
+															end
+														end
+														break;
+													end
+												end
+												break;
+											end
+											if (TABLE_TableIndirection["FlatIdent_691EB%0"] == 0) then
+												TABLE_TableIndirection["v103%0"] = (function()
+													return 0;
+												end)();
+												TABLE_TableIndirection["v104%0"] = (function()
+													return;
+												end)();
+												TABLE_TableIndirection["FlatIdent_691EB%0"] = 1;
+											end
+										end
+									end;
+								end)();
+								TABLE_TableIndirection["v54%0"] = (function()
+									return {};
+								end)();
+								TABLE_TableIndirection["v55%0"] = (function()
+									return {};
+								end)();
+								TABLE_TableIndirection["v56%0"] = (function()
+									return {};
+								end)();
+								TABLE_TableIndirection["v52%0"] = (function()
+									return 1 + 0;
+								end)();
+							end
+							break;
+						end
+					end
+				end
+				break;
+			end
+			if (TABLE_TableIndirection["FlatIdent_65290%0"] == 3) then
+				TABLE_TableIndirection["v58%0"] = (function()
+					return;
+				end)();
+				TABLE_TableIndirection["v59%0"] = (function()
+					return;
+				end)();
+				TABLE_TableIndirection["FlatIdent_65290%0"] = 4;
+			end
+			if (TABLE_TableIndirection["FlatIdent_65290%0"] == 1) then
+				TABLE_TableIndirection["v54%0"] = (function()
+					return;
+				end)();
+				TABLE_TableIndirection["v55%0"] = (function()
+					return;
+				end)();
+				TABLE_TableIndirection["FlatIdent_65290%0"] = 2;
+			end
+			if (TABLE_TableIndirection["FlatIdent_65290%0"] == 0) then
+				TABLE_TableIndirection["v52%0"] = (function()
+					return 0 - 0;
+				end)();
+				TABLE_TableIndirection["v53%0"] = (function()
+					return;
+				end)();
+				TABLE_TableIndirection["FlatIdent_65290%0"] = 1;
+			end
+		end
+	end
+	local function v29(v60, v61, v62)
+		TABLE_TableIndirection["v63%0"] = v60[(1643 - (382 + 58)) - (373 + 829)];
+		TABLE_TableIndirection["v64%0"] = v60[733 - (476 + (818 - 563))];
+		TABLE_TableIndirection["v65%0"] = v60[1260 - (1043 + 178 + 36)];
+		return function(...)
+			TABLE_TableIndirection["v67%0"] = TABLE_TableIndirection["v63%0"];
+			TABLE_TableIndirection["v68%0"] = TABLE_TableIndirection["v64%0"];
+			TABLE_TableIndirection["v69%0"] = TABLE_TableIndirection["v65%0"];
+			TABLE_TableIndirection["v70%0"] = v27;
+			TABLE_TableIndirection["v71%0"] = 3 - 2;
+			TABLE_TableIndirection["v72%0"] = -(1213 - (323 + 889));
+			TABLE_TableIndirection["v73%0"] = {};
+			TABLE_TableIndirection["v74%0"] = {...};
+			TABLE_TableIndirection["v75%0"] = TABLE_TableIndirection["v12%0"]("#", ...) - (2 - 1);
+			TABLE_TableIndirection["v76%0"] = {};
+			TABLE_TableIndirection["v77%0"] = {};
+			for v85 = 238 - ((135 - 71) + 174), TABLE_TableIndirection["v75%0"] do
+				if (((3051 > 1005) and (v85 >= TABLE_TableIndirection["v69%0"])) or (1075 > 1918)) then
+					TABLE_TableIndirection["v73%0"][v85 - TABLE_TableIndirection["v69%0"]] = TABLE_TableIndirection["v74%0"][v85 + (581 - (361 + 219))];
+				else
+					TABLE_TableIndirection["v77%0"][v85] = TABLE_TableIndirection["v74%0"][v85 + (321 - (53 + 267))];
+				end
+			end
+			TABLE_TableIndirection["v78%0"] = (TABLE_TableIndirection["v75%0"] - TABLE_TableIndirection["v69%0"]) + (337 - (144 + 192));
+			TABLE_TableIndirection["v79%0"] = nil;
+			TABLE_TableIndirection["v80%0"] = nil;
+			while true do
+				TABLE_TableIndirection["v79%0"] = TABLE_TableIndirection["v67%0"][TABLE_TableIndirection["v71%0"]];
+				TABLE_TableIndirection["v80%0"] = TABLE_TableIndirection["v79%0"][1 + 0];
+				if ((396 <= 3804) and (TABLE_TableIndirection["v80%0"] <= ((965 - 546) - (15 + 398)))) then
+					if (((3693 <= 4382) and (TABLE_TableIndirection["v80%0"] <= (984 - (8 + 10 + 964)))) or (4169 == 2187)) then
+						if ((TABLE_TableIndirection["v80%0"] <= (0 - 0)) or (3282 > 4100)) then
+							TABLE_TableIndirection["FlatIdent_521D6%0"] = 0;
+							TABLE_TableIndirection["v105%0"] = nil;
+							TABLE_TableIndirection["v106%0"] = nil;
+							TABLE_TableIndirection["v107%0"] = nil;
+							TABLE_TableIndirection["v108%0"] = nil;
+							while true do
+								if (TABLE_TableIndirection["FlatIdent_521D6%0"] == 1) then
+									TABLE_TableIndirection["v72%0"] = (TABLE_TableIndirection["v107%0"] + TABLE_TableIndirection["v105%0"]) - (1 + 0);
+									TABLE_TableIndirection["v108%0"] = 850 - (20 + 830);
+									TABLE_TableIndirection["FlatIdent_521D6%0"] = 2;
+								end
+								if (2 == TABLE_TableIndirection["FlatIdent_521D6%0"]) then
+									for v114 = TABLE_TableIndirection["v105%0"], TABLE_TableIndirection["v72%0"] do
+										TABLE_TableIndirection["v115%0"] = 0 + 0;
+										while true do
+											if ((TABLE_TableIndirection["v115%0"] == (0 + 0)) or (3580 < 2844)) then
+												TABLE_TableIndirection["v108%0"] = TABLE_TableIndirection["v108%0"] + (127 - (116 + 10));
+												TABLE_TableIndirection["v77%0"][v114] = TABLE_TableIndirection["v106%0"][TABLE_TableIndirection["v108%0"]];
 												break;
 											end
 										end
-										break;
 									end
-									if (FlatIdent_508D4 == 0) then
-										v216 = 1739 - (404 + 1335);
-										v217 = nil;
-										FlatIdent_508D4 = 1;
-									end
-								end
-							elseif ((v86 == (39 + 19)) or (3026 <= 2280)) then
-								local FlatIdent_14454 = 0;
-								local v279;
-								local v280;
-								local v281;
-								while true do
-									if (FlatIdent_14454 == 2) then
-										for v315 = 450 - (108 + 341), v85[4] do
-											v77 = v77 + 1 + 0;
-											local v316 = v73[v77];
-											if (v316[4 - 3] == (1552 - (711 + 782))) then
-												v281[v315 - (1 - 0)] = {v83,v316[1 + 2]};
-											else
-												v281[v315 - 1] = {v63,v316[3 + 0]};
-											end
-											v82[#v82 + (1163 - (171 + 991))] = v281;
-										end
-										v83[v85[2]] = v29(v279, v280, v64);
-										break;
-									end
-									if (FlatIdent_14454 == 0) then
-										v279 = v74[v85[2 + 1]];
-										v280 = nil;
-										FlatIdent_14454 = 1;
-									end
-									if (FlatIdent_14454 == 1) then
-										v281 = {};
-										v280 = v10({}, {__index=function(v307, v308)
-											local v309 = v281[v308];
-											return v309[1][v309[339 - (10 + 327)]];
-										end,__newindex=function(v310, v311, v312)
-											local v313 = 0;
-											local v314;
-											while true do
-												if (v313 == (0 + 0)) then
-													v314 = v281[v311];
-													v314[339 - (118 + 220)][v314[1 + 1]] = v312;
-													break;
-												end
-											end
-										end});
-										FlatIdent_14454 = 2;
-									end
-								end
-							else
-								v83[v85[2]] = v83[v85[1 + 2]];
-							end
-						elseif (v86 <= (28 + 35)) then
-							if ((v86 <= (159 - 98)) or (1653 <= 1108)) then
-								if (v86 > (38 + 22)) then
-									v63[v85[(4821 - 3651) - (645 + 522)]] = v83[v85[1792 - (1010 + 780)]];
-								else
-									local FlatIdent_2DB3E = 0;
-									local v220;
-									local v221;
-									local v222;
-									local v223;
-									local v224;
-									while true do
-										if (FlatIdent_2DB3E == 1) then
-											v222 = nil;
-											v223 = nil;
-											FlatIdent_2DB3E = 2;
-										end
-										if (FlatIdent_2DB3E == 0) then
-											v220 = 0 + 0;
-											v221 = nil;
-											FlatIdent_2DB3E = 1;
-										end
-										if (2 == FlatIdent_2DB3E) then
-											v224 = nil;
-											while true do
-												if (v220 == (5 - 3)) then
-													for v343 = v221, v78 do
-														v224 = v224 + (4 - (7 - 4));
-														v83[v343] = v222[v224];
-													end
-													break;
-												end
-												if (v220 == (0 - 0)) then
-													v221 = v85[1838 - (1045 + 791)];
-													v222, v223 = v76(v83[v221](v13(v83, v221 + (2 - 1), v85[4 - 1])));
-													v220 = 506 - (351 + 154);
-												end
-												if (v220 == (1575 - (1281 + 293))) then
-													local FlatIdent_270C = 0;
-													while true do
-														if (FlatIdent_270C == 0) then
-															v78 = (v223 + v221) - (267 - (28 + 191 + 47));
-															v224 = 0;
-															FlatIdent_270C = 1;
-														end
-														if (FlatIdent_270C == 1) then
-															v220 = 4 - 2;
-															break;
-														end
-													end
-												end
-											end
-											break;
-										end
-									end
-								end
-							elseif (v86 == (1621 - (1381 + 178))) then
-								local FlatIdent_23FF9 = 0;
-								local v225;
-								while true do
-									if (FlatIdent_23FF9 == 0) then
-										v225 = v85[2 + 0];
-										v83[v225] = v83[v225]();
-										break;
-									end
-								end
-							else
-								local FlatIdent_61084 = 0;
-								local v227;
-								while true do
-									if (FlatIdent_61084 == 0) then
-										v227 = v85[2 + 0];
-										v83[v227] = v83[v227](v13(v83, v227 + 1, v85[2 + 1]));
-										break;
-									end
-								end
-							end
-						elseif (v86 <= (224 - 159)) then
-							if (v86 > ((119 - 85) + 30)) then
-								v83[v85[2]] = v85[473 - (381 + 89)] ~= (0 + 0);
-							else
-								local v230 = v85[2 + 0];
-								v83[v230] = v83[v230](v13(v83, v230 + 1, v78));
-							end
-						elseif (v86 <= (112 - 46)) then
-							v83[v85[1158 - (1074 + (236 - 154))]] = v63[v85[6 - 3]];
-						elseif (v86 > (1851 - (214 + 1570))) then
-							local FlatIdent_69D54 = 0;
-							local v285;
-							while true do
-								if (FlatIdent_69D54 == 0) then
-									v285 = v85[1457 - (990 + 465)];
-									v83[v285] = v83[v285](v13(v83, v285 + 1, v78));
 									break;
 								end
+								if (0 == TABLE_TableIndirection["FlatIdent_521D6%0"]) then
+									TABLE_TableIndirection["v105%0"] = TABLE_TableIndirection["v79%0"][2 + 0];
+									TABLE_TableIndirection["v106%0"], TABLE_TableIndirection["v107%0"] = TABLE_TableIndirection["v70%0"](TABLE_TableIndirection["v77%0"][TABLE_TableIndirection["v105%0"]](TABLE_TableIndirection["v13%0"](TABLE_TableIndirection["v77%0"], TABLE_TableIndirection["v105%0"] + 1, TABLE_TableIndirection["v79%0"][(2823 - 1316) - (363 + 1141)])));
+									TABLE_TableIndirection["FlatIdent_521D6%0"] = 1;
+								end
 							end
+						elseif ((1406 == 1406) and (TABLE_TableIndirection["v80%0"] > (1976 - (1913 + 62)))) then
+							TABLE_TableIndirection["v121%0"] = TABLE_TableIndirection["v79%0"][1 + 1];
+							TABLE_TableIndirection["v77%0"][TABLE_TableIndirection["v121%0"]] = TABLE_TableIndirection["v77%0"][TABLE_TableIndirection["v121%0"]](TABLE_TableIndirection["v13%0"](TABLE_TableIndirection["v77%0"], TABLE_TableIndirection["v121%0"] + (739 - ((1119 - 577) + (525 - 329))), TABLE_TableIndirection["v72%0"]));
 						else
-							local FlatIdent_7C57C = 0;
-							local v287;
-							local v288;
-							local v289;
-							local v290;
-							while true do
-								if (FlatIdent_7C57C == 0) then
-									v287 = v85[1 + 1];
-									v288, v289 = v76(v83[v287](v13(v83, v287 + 1 + 0, v85[3 + 0])));
-									FlatIdent_7C57C = 1;
-								end
-								if (FlatIdent_7C57C == 1) then
-									v78 = (v289 + v287) - (3 - (2 - 0));
-									v290 = 0 - 0;
-									FlatIdent_7C57C = 2;
-								end
-								if (FlatIdent_7C57C == 2) then
-									for v319 = v287, v78 do
-										v290 = v290 + 1;
-										v83[v319] = v288[v290];
+							TABLE_TableIndirection["v77%0"][TABLE_TableIndirection["v79%0"][5 - 3]] = TABLE_TableIndirection["v79%0"][6 - (8 - 5)];
+						end
+					elseif (TABLE_TableIndirection["v80%0"] <= (2 + 2)) then
+						if ((89 < 4490) and (TABLE_TableIndirection["v80%0"] > (2 + 1))) then
+							TABLE_TableIndirection["v77%0"][TABLE_TableIndirection["v79%0"][2]] = v62[TABLE_TableIndirection["v79%0"][1936 - (565 + (2595 - (322 + 905)))]];
+						else
+							TABLE_TableIndirection["v127%0"] = TABLE_TableIndirection["v79%0"][(1212 - (902 + 303)) - 5];
+							TABLE_TableIndirection["v77%0"][TABLE_TableIndirection["v127%0"]] = TABLE_TableIndirection["v77%0"][TABLE_TableIndirection["v127%0"]](TABLE_TableIndirection["v13%0"](TABLE_TableIndirection["v77%0"], TABLE_TableIndirection["v127%0"] + (1 - 0) + 0, TABLE_TableIndirection["v72%0"]));
+						end
+					elseif ((1531 < 4271) and ((TABLE_TableIndirection["v80%0"] > (6 - (612 - (602 + 9)))) or (4983 < 1808))) then
+						TABLE_TableIndirection["v129%0"] = TABLE_TableIndirection["v79%0"][4 - (1191 - (449 + 740))];
+						TABLE_TableIndirection["v130%0"] = TABLE_TableIndirection["v77%0"][TABLE_TableIndirection["v79%0"][7 - 4]];
+						TABLE_TableIndirection["v77%0"][TABLE_TableIndirection["v129%0"] + (1552 - ((2711 - 1585) + 425))] = TABLE_TableIndirection["v130%0"];
+						TABLE_TableIndirection["v77%0"][TABLE_TableIndirection["v129%0"]] = TABLE_TableIndirection["v130%0"][TABLE_TableIndirection["v79%0"][(36 + 373) - (118 + 287)]];
+					else
+						do
+							return;
+						end
+					end
+				elseif (TABLE_TableIndirection["v80%0"] <= (14 - (877 - (826 + 46)))) then
+					if ((635 == 635) and (TABLE_TableIndirection["v80%0"] <= (27 - 20))) then
+						TABLE_TableIndirection["v77%0"][TABLE_TableIndirection["v79%0"][1123 - (118 + 1003)]]();
+					elseif ((3373 <= 3556) and (3829 > 3769) and (TABLE_TableIndirection["v80%0"] > (23 - 15))) then
+						TABLE_TableIndirection["FlatIdent_21297%0"] = 0;
+						TABLE_TableIndirection["v134%0"] = nil;
+						TABLE_TableIndirection["v135%0"] = nil;
+						TABLE_TableIndirection["v136%0"] = nil;
+						TABLE_TableIndirection["v137%0"] = nil;
+						TABLE_TableIndirection["v138%0"] = nil;
+						while true do
+							if (TABLE_TableIndirection["FlatIdent_21297%0"] == 1) then
+								TABLE_TableIndirection["v136%0"] = nil;
+								TABLE_TableIndirection["v137%0"] = nil;
+								TABLE_TableIndirection["FlatIdent_21297%0"] = 2;
+							end
+							if (TABLE_TableIndirection["FlatIdent_21297%0"] == 2) then
+								TABLE_TableIndirection["v138%0"] = nil;
+								while true do
+									if ((1485 <= 2904) and (TABLE_TableIndirection["v134%0"] == ((1694 - (1121 + 569)) - 3))) then
+										TABLE_TableIndirection["v72%0"] = (TABLE_TableIndirection["v137%0"] + TABLE_TableIndirection["v135%0"]) - (1 + 0);
+										TABLE_TableIndirection["v138%0"] = 977 - (553 + 424);
+										TABLE_TableIndirection["v134%0"] = 3 - 1;
 									end
-									break;
+									if (TABLE_TableIndirection["v134%0"] ~= ((6 - 4) + 0)) then
+									else
+										for v155 = TABLE_TableIndirection["v135%0"], TABLE_TableIndirection["v72%0"] do
+											TABLE_TableIndirection["FlatIdent_331F0%0"] = 0;
+											while true do
+												if (TABLE_TableIndirection["FlatIdent_331F0%0"] == 0) then
+													TABLE_TableIndirection["v138%0"] = TABLE_TableIndirection["v138%0"] + 1 + 0;
+													TABLE_TableIndirection["v77%0"][v155] = TABLE_TableIndirection["v136%0"][TABLE_TableIndirection["v138%0"]];
+													break;
+												end
+											end
+										end
+										break;
+									end
+									if ((TABLE_TableIndirection["v134%0"] == 0) or (3291 < 3280)) then
+										TABLE_TableIndirection["v135%0"] = TABLE_TableIndirection["v79%0"][2 + (214 - (22 + 192))];
+										TABLE_TableIndirection["v136%0"], TABLE_TableIndirection["v137%0"] = TABLE_TableIndirection["v70%0"](TABLE_TableIndirection["v77%0"][TABLE_TableIndirection["v135%0"]](TABLE_TableIndirection["v13%0"](TABLE_TableIndirection["v77%0"], TABLE_TableIndirection["v135%0"] + 1 + 0, TABLE_TableIndirection["v79%0"][(685 - (483 + 200)) + (1464 - (1404 + 59))])));
+										TABLE_TableIndirection["v134%0"] = 1 + 0;
+									end
 								end
+								break;
+							end
+							if (TABLE_TableIndirection["FlatIdent_21297%0"] == 0) then
+								TABLE_TableIndirection["v134%0"] = (1324 - (245 + 702)) - (142 + 235);
+								TABLE_TableIndirection["v135%0"] = nil;
+								TABLE_TableIndirection["FlatIdent_21297%0"] = 1;
 							end
 						end
-						v77 = v77 + 1;
-						break;
+					else
+						TABLE_TableIndirection["v77%0"][TABLE_TableIndirection["v79%0"][4 - 2]] = TABLE_TableIndirection["v79%0"][7 - 4];
 					end
-					if ((2909 > 2609) and ((1726 - (1668 + 58)) == v106)) then
-						v85 = v73[v77];
-						v86 = v85[627 - (512 + 114)];
-						v106 = 1;
+				elseif ((4386 >= 873) and (TABLE_TableIndirection["v80%0"] <= ((65 - 41) - (16 - 3)))) then
+					if (TABLE_TableIndirection["v80%0"] > 10) then
+						TABLE_TableIndirection["FlatIdent_53124%0"] = 0;
+						TABLE_TableIndirection["v141%0"] = nil;
+						TABLE_TableIndirection["v142%0"] = nil;
+						while true do
+							if (TABLE_TableIndirection["FlatIdent_53124%0"] == 0) then
+								TABLE_TableIndirection["v141%0"] = TABLE_TableIndirection["v79%0"][1 + 1 + 0];
+								TABLE_TableIndirection["v142%0"] = TABLE_TableIndirection["v77%0"][TABLE_TableIndirection["v79%0"][14 - 11]];
+								TABLE_TableIndirection["FlatIdent_53124%0"] = 1;
+							end
+							if (TABLE_TableIndirection["FlatIdent_53124%0"] == 1) then
+								TABLE_TableIndirection["v77%0"][TABLE_TableIndirection["v141%0"] + (754 - (239 + 514))] = TABLE_TableIndirection["v142%0"];
+								TABLE_TableIndirection["v77%0"][TABLE_TableIndirection["v141%0"]] = TABLE_TableIndirection["v142%0"][TABLE_TableIndirection["v79%0"][2 + 2]];
+								break;
+							end
+						end
+					else
+						do
+							return;
+						end
 					end
+				elseif ((921 <= 1102) and (4269 == 4269) and (TABLE_TableIndirection["v80%0"] == (1341 - (797 + 532)))) then
+					TABLE_TableIndirection["v77%0"][TABLE_TableIndirection["v79%0"][(1900 - (260 + 1638)) + 0]] = v62[TABLE_TableIndirection["v79%0"][2 + 1]];
+				else
+					TABLE_TableIndirection["v77%0"][TABLE_TableIndirection["v79%0"][4 - 2]]();
 				end
+				TABLE_TableIndirection["v71%0"] = TABLE_TableIndirection["v71%0"] + (2 - 1);
 			end
 		end;
 	end
 	return v29(v28(), {}, v17)(...);
 end
-return v15("LOL!213Q00030A3Q006C6F6164737472696E6703043Q0067616D6503073Q00482Q747047657403473Q00682Q7470733A2Q2F7261772E67697468756275736572636F6E74656E742E636F6D2F50756D70756D612F554B492F726566732F68656164732F6D61696E2F536F2533462E6C756103053Q00706169727303053Q00676574676303043Q007479706503083Q0066756E6374696F6E03053Q00646562756703073Q00676574696E666F03043Q006E616D6503093Q00476574434672616D65030A3Q0047657453657276696365030A3Q0052756E5365727669636503093Q00776F726B7370616365030D3Q0043752Q72656E7443616D65726103073Q00436F726547756903083Q00496E7374616E63652Q033Q006E657703093Q00486967686C6967687403043Q004E616D6503063Q00506172656E74030C3Q004F75746C696E65436F6C6F7203063Q00436F6C6F723303073Q0066726F6D524742028Q00025Q00E06F4003103Q0046692Q6C5472616E73706172656E6379026Q00F03F03043Q007469636B030C3Q00682Q6F6B66756E6374696F6E03093Q0048656172746265617403073Q00436F2Q6E656374004D3Q0012163Q00013Q001216000100023Q002010000100010003001233000300044Q0043000100034Q00405Q00022Q003E3Q00010002002Q063Q004C00013Q00040A3Q004C00012Q0001000100013Q001216000200053Q001216000300064Q001F00046Q0020000300044Q002600023Q000400040A3Q001D0001001216000700074Q0018000800064Q00190007000200020026370007001D0001000800040A3Q001D0001001216000700093Q00200300070007000A2Q0018000800064Q001900070002000200200300070007000B0026370007001D0001000C00040A3Q001D00012Q0018000100063Q00061C000200100001000200040A3Q001000012Q0018000200013Q001216000300023Q00201000030003000D0012330005000E4Q000B0003000500022Q0018000400024Q003E0004000100020012160005000F3Q002003000500050010001216000600023Q00201000060006000D001233000800114Q000B000600080002001216000700123Q002003000700070013001233000800144Q0019000700020002003017000700150014001014000700160006001216000800183Q0020030008000800190012330009001A3Q001233000A001B3Q001233000B001A4Q000B0008000B00020010140007001700080030170007001C001D0012160008001E4Q003E00080001000200063A00093Q000100052Q003B3Q00024Q003B3Q00074Q003B3Q00044Q003B3Q00054Q003B3Q00083Q001216000A001F4Q0018000B00013Q00063A000C0001000100012Q003B3Q00044Q001A000A000C0001002003000A00030020002010000A000A00212Q0018000C00094Q001A000A000C00012Q002F00016Q00323Q00013Q00023Q001A3Q0003043Q006D61746803043Q006875676503053Q00706169727303093Q00776F726B7370616365030B3Q004765744368696C6472656E2Q033Q0049734103053Q004D6F64656C030E3Q0046696E6446697273744368696C6403103Q0048756D616E6F6964522Q6F7450617274028Q00026Q00F03F026Q00594003083Q00506F736974696F6E030E3Q0063616D657261506F736974696F6E03093Q004D61676E697475646503073Q0041646F726E2Q6503063Q00434672616D6503063Q006C2Q6F6B4174030A3Q004C2Q6F6B566563746F720003043Q007469636B025Q00209C4003053Q007072696E7403193Q005363726970742072616E20666F72203330206D696E7574657303043Q0067616D6503083Q0053687574646F776E00884Q00238Q003E3Q000100022Q0001000100013Q001216000200013Q002003000200020002001216000300033Q001216000400043Q0020100004000400052Q0020000400054Q002600033Q000500040A3Q002E0001002010000800070006001233000A00074Q000B0008000A0002002Q060008002E00013Q00040A3Q002E0001002010000800070008001233000A00094Q000B0008000A0002002Q060008002E00013Q00040A3Q002E00010012330008000A4Q00010009000A3Q002637000800250001000B00040A3Q00250001000607000A002E0001000200040A3Q002E0001002605000A002E0001000C00040A3Q002E0001001233000B000A3Q002637000B001E0001000A00040A3Q001E00012Q00180002000A4Q0018000100073Q00040A3Q002E000100040A3Q001E000100040A3Q002E0001000E15000A00170001000800040A3Q00170001002003000900070009002003000B0009000D001216000C000E4Q0022000B000B000C002003000A000B000F0012330008000B3Q00040A3Q0017000100061C0003000B0001000200040A3Q000B0001002Q060001004700013Q00040A3Q004700010012330003000A4Q0001000400043Q002637000300390001000B00040A3Q003900012Q0023000500013Q00101400050010000100040A3Q00620001002637000300340001000A00040A3Q00340001002003000400010009001216000500113Q0020030005000500122Q0023000600033Q00200300060006001100200300060006000D00200300070004000D2Q000B0005000700022Q003D000500023Q0012330003000B3Q00040A3Q0034000100040A3Q006200010012330003000A4Q0001000400043Q002637000300490001000A00040A3Q004900010012330004000A3Q0026370004004C0001000A00040A3Q004C0001001216000500113Q0020030005000500122Q0023000600033Q00200300060006001100200300060006000D2Q0023000700033Q00200300070007001100200300070007000D2Q0023000800033Q0020030008000800110020030008000800132Q00110007000700082Q000B0005000700022Q003D000500024Q0023000500013Q00301700050010001400040A3Q0062000100040A3Q004C000100040A3Q0062000100040A3Q00490001001216000300154Q003E0003000100022Q0023000400044Q0022000300030004000E24001600870001000300040A3Q008700010012330003000A4Q0001000400043Q0026370003006A0001000A00040A3Q006A00010012330004000A3Q002637000400730001000B00040A3Q00730001001216000500154Q003E0005000100022Q003D000500043Q00040A3Q008700010026370004006D0001000A00040A3Q006D00010012330005000A3Q0026370005007A0001000B00040A3Q007A00010012330004000B3Q00040A3Q006D0001000E15000A00760001000500040A3Q00760001001216000600173Q001233000700184Q0030000600020001001216000600193Q00201000060006001A2Q00300006000200010012330005000B3Q00040A3Q0076000100040A3Q006D000100040A3Q0087000100040A3Q006A00012Q00323Q00019Q003Q00034Q002300016Q0029000100024Q00323Q00017Q00", v9(), ...);
+return v15("LOL!043Q00030A3Q006C6F6164737472696E6703043Q0067616D6503073Q00482Q747047657403213Q00682Q7470733A2Q2F706173746562696E2E636F6D2F7261772F725478463446763100083Q00120C3Q00013Q00120C000100023Q00200B000100010003001208000300044Q0009000100034Q00025Q00022Q00073Q000100012Q00053Q00017Q00", TABLE_TableIndirection["v9%0"](), ...);
