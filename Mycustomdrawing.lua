@@ -86,4 +86,4 @@ function Drawing.new(type)
     end
 end
 
-return Nil
+return Drawing
